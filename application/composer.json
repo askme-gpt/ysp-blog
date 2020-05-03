@@ -1,0 +1,6 @@
+{
+    "require": {
+        "catfan/medoo": "^1.7",
+        "smarty/smarty": "^3.1"
+    }
+}
