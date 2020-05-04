@@ -15,7 +15,6 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
         //把配置保存起来
         $arrConfig = Yaf\Application::app()->getConfig();
         Yaf\Registry::set('config', $arrConfig);
-
     }
 
     public function _initLoad()
@@ -26,8 +25,8 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
     public function _initPlugin(Yaf\Dispatcher $dispatcher)
     {
         //注册一个插件
-        $objSamplePlugin = new SamplePlugin();
-        $dispatcher->registerPlugin($objSamplePlugin);
+        // $objSamplePlugin = new SamplePlugin();
+        // $dispatcher->registerPlugin($objSamplePlugin);
     }
 
     public function _initRoute(Yaf\Dispatcher $dispatcher)
@@ -37,6 +36,29 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
 
     public function _initView(Yaf\Dispatcher $dispatcher)
     {
+        $smartyConfig = Yaf\Registry::get("config")->get("smarty");
+
         //在这里注册自己的view控制器，例如smarty,firekylin
+        $smarty = new SmartyAdapter(null, $smartyConfig);
+        $dispatcher::getInstance()->setView($smarty);
+    }
+
+    public function _initDatabase()
+    {
+        $arrConfig = Yaf\Registry::get('config');
+        $option    = [
+            'database_type' => $arrConfig->database->database_type,
+            'database_name' => $arrConfig->database->database_name,
+            'server'        => $arrConfig->database->server,
+            'username'      => $arrConfig->database->username,
+            'password'      => $arrConfig->database->password,
+            'prefix'        => $arrConfig->database->prefix ?? '',
+            'charset'       => $arrConfig->database->charset ?? 'utf8',
+            'logging'       => $arrConfig->database->logging,
+            'option'        => [
+                PDO::ATTR_CASE => PDO::CASE_NATURAL,
+            ],
+        ];
+        Yaf\Registry::set('db', new \Medoo\Medoo($option));
     }
 }

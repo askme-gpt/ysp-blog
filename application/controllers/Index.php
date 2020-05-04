@@ -1,7 +1,6 @@
 <?php
-// namespace Controller;
 
-use \Yaf\Controller_Abstract as BaseController;
+use \Yaf\Controller_Abstract as Controller;
 
 /**
  * @name IndexController
@@ -9,7 +8,7 @@ use \Yaf\Controller_Abstract as BaseController;
  * @desc 默认控制器
  * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
  */
-class IndexController extends BaseController
+class IndexController extends Controller
 {
     /**
      * 默认初始化方法，如果不需要，可以删除掉这个方法
@@ -17,7 +16,9 @@ class IndexController extends BaseController
      */
     public function init()
     {
-        $this->getView()->assign("header", "Yaf Test");
+        if (wantJson()) {
+            Yaf\Dispatcher::getInstance()->disableView();
+        }
     }
 
     /**
@@ -28,15 +29,10 @@ class IndexController extends BaseController
     public function indexAction($name = "Stranger")
     {
         //1. fetch query
-        $get = $this->getRequest()->getQuery("get", "default value");
+        $get = $this->getRequest()->getQuery();
         //2. fetch model
-        $model   = new UserModel();
-        $content = $model->index();
-
-        //3. assign
-        $this->getView()->assign(compact('name', 'content'));
-
-        //4. render by Yaf, 如果这里返回FALSE, Yaf将不会调用自动视图引擎Render模板
-        // return true;
+        $user = new UserModel();
+        $list = $user->list();
+        $this->getView()->assign(compact('list'));
     }
 }
