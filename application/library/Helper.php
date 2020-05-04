@@ -32,7 +32,7 @@ function get_ip()
  */
 function get_city($ip = '')
 {
-    if (!filter_var($id, FILTER_SANITIZE_URL)) {
+    if (!filter_var($ip, FILTER_SANITIZE_URL)) {
         return;
     }
     if ($ip == '') {
@@ -605,4 +605,22 @@ function password_is_vulnerable($pw, $score = false)
     }
 
     return false; // possibly OK
+}
+
+function wantJson()
+{
+    $header = join(array_only($_SERVER, ['HTTP_CONTENT_TYPE', 'HTTP_ACCEPT', 'CONTENT_TYPE']), ',');
+    return strpos($header, '/json');
+}
+
+/**
+ * 快捷方法
+ * @param  [type] $view_path [description]
+ * @param  [type] $tpl_vars  [description]
+ * @return [type]            [description]
+ */
+function view($view_path, $tpl_vars = [])
+{
+    $blade = new BladeAdapter();
+    return $blade->display($view_path, $tpl_vars);
 }
