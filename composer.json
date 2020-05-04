@@ -1,0 +1,11 @@
+{
+    "require": {
+        "eftec/bladeone": "^3.43",
+        "catfan/medoo": "^1.7"
+    },
+    "autoload": {
+        "files": [
+                "application/library/Helper.php"
+            ]
+    }
+}

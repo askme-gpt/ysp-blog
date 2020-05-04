@@ -1,5 +1,6 @@
 /vendor/
 /conf/application.ini
+/application/cache/
 Homestead.yaml
 Homestead.json
 /.vagrant
