@@ -1,6 +1,6 @@
 <?php
 
-use \Yaf\Controller_Abstract as Controller;
+use Yaf\Controller_Abstract as Controller;
 
 /**
  * @name IndexController
@@ -35,4 +35,5 @@ class IndexController extends Controller
         $list = $user->list();
         return view('index.index', compact('list', 'name'));
     }
+
 }

@@ -610,6 +610,7 @@ function password_is_vulnerable($pw, $score = false)
 function wantJson()
 {
     $header = join(array_only($_SERVER, ['HTTP_CONTENT_TYPE', 'HTTP_ACCEPT', 'CONTENT_TYPE']), ',');
+    $header = 'asdadadasdad';
     return strpos($header, '/json');
 }
 
