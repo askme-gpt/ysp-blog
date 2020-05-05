@@ -21,7 +21,7 @@ class ArticleModel
 
     public function articleList($search, $offset, $limit)
     {
-        Yaf\Loader::import(APPLICATION_PATH . '/vendor/hightman/xunsearch/lib/XS.class.php');
+
         $list = $this->db->select($this->table, [
             "[>]users"      => ["user_id" => "id"],
             "[>]categories" => ["category_id" => "id"],
@@ -52,7 +52,7 @@ class ArticleModel
 
     public function allArticle()
     {
-        return $this->db->select($this->table, ['id', 'title', 'content'], ['status' => 10]);
+        return $this->db->select($this->table, ['id', 'title', 'content', 'updated_at'], ['status' => 10]);
     }
 
     public function insertArticle($arrInfo)

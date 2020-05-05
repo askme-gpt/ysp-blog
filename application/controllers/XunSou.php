@@ -11,6 +11,7 @@ class XunSouController extends Controller
 {
     private $_index;
     private $_doc;
+    private $_search;
 
     public function init($value = '')
     {
@@ -20,6 +21,10 @@ class XunSouController extends Controller
         $xs = new \XS(APPLICATION_PATH . '/conf/xunsou.ini'); // 建立 XS 对象，项目名称为：demo
         // 获取索引对象
         $this->_index = $xs->index;
+
+        // 获取搜索对象
+        $this->_search = $xs->search;
+
         // 创建文档对象
         $this->_doc = new XSDocument;
     }
@@ -28,9 +33,11 @@ class XunSouController extends Controller
      */
     public function addAction()
     {
+        $this->flushAction();
         $article = new ArticleModel();
         $data    = $article->allArticle();
-        foreach ($data as $value) {
+        foreach ($data as &$value) {
+            $value['updated_at'] = date('Ymd', strtotime($value['updated_at']));
             // 添加到索引数据库中
             $this->_doc->setFields($value);
             $this->_index->add($this->_doc);
@@ -60,7 +67,7 @@ class XunSouController extends Controller
         return $this->_index->del($ids);
     }
 
-    public function flushAction($value = '')
+    public function flushAction()
     {
         // 执行清空操作
         return $this->_index->clean();
@@ -76,6 +83,8 @@ class XunSouController extends Controller
         $this->_index->beginRebuild();
 
         // 然后在此开始添加数据
+        $this->_doc->setFields($value);
+
         $this->_index->add($this->_doc);
 
         // 告诉服务器重建完比
@@ -86,8 +95,154 @@ class XunSouController extends Controller
      * 中止索引重建 丢弃重建临时库的所有数据, 恢复成当前搜索库, 主要用于偶尔重建意外中止的情况
      * @return [type] [description]
      */
-    public function stopRebuild()
+    public function stopRebuildAction()
     {
         $this->_index->stopRebuild();
+    }
+    /**
+     * [getHotAction description]
+     * @param  [type] $limit 整数值，设置要返回的词数量上限，默认为 6，最大值为 50
+     * @param  [type] $type  指定排序类型，默认为 total(总量)，可选值还有：lastnum(上周) 和 currnum(本周)
+     * @return [type]        [description]
+     */
+    public function getHotAction($limit = 10, $type = 'total')
+    {
+        $words = $search->getHotQuery($limit, $type); // 获取前 10 个上周热门词
+    }
+
+    public function fuzzySearchAction($search = '', $offset = 0, $limit = 50, $field = 'title', $add_weight = '')
+    {
+        $docs = $this->_search->setQuery($search);
+        if ($add_weight) {
+            // 增加附加条件：提升标题中包含 $add_weight 的记录的权重
+            $this->_search->addWeight($field, $add_weight);
+        }
+        $doc = $this->_search->setLimit($limit, $offset)
+            ->search();
+
+        // 获取搜索结果的匹配总数估算值
+        $count = $this->_search->count();
+        return;
+
+    }
+
+    public function searchAction()
+    {
+        // 支持的 GET 参数列表
+        // q: 查询语句
+        // m: 开启模糊搜索，其值为 yes/no
+        // f: 只搜索某个字段，其值为字段名称，要求该字段的索引方式为 self/both
+        // s: 排序字段名称及方式，其值形式为：xxx_ASC 或 xxx_DESC
+        // p: 显示第几页，每页数量为 XSSearch::PAGE_SIZE 即 10 条
+        // ie: 查询语句编码，默认为 UTF-8
+        // oe: 输出编码，默认为 UTF-8
+        // xml: 是否将搜索结果以 XML 格式输出，其值为 yes/no
+        $__ = array('q', 'm', 'f', 's', 'p', 'syn', 'xml');
+        foreach ($__ as $_) {
+            $$_ = $_GET[$_] ?? '';
+        }
+        // recheck request parameters
+        $q             = get_magic_quotes_gpc() ? stripslashes($q) : $q;
+        $f             = empty($f) ? '_all' : $f;
+        ${'m_check'}   = ($m == 'yes' ? ' checked' : '');
+        ${'syn_check'} = ($syn == 'yes' ? ' checked' : '');
+        ${'s_' . $s}   = ' selected';
+        ${'f_' . $f}   = ' checked';
+
+        // base url
+        $bu = $this->getRequest()->uri . '?q=' . urlencode($q) . '&m=' . $m . '&f=' . $f;
+
+        // other variable maybe used in tpl
+        $count       = $total       = $search_cost       = 0;
+        $docs        = $related        = $corrected        = $hot        = array();
+        $error       = $pager       = '';
+        $total_begin = microtime(true);
+
+        // perform the search
+        try {
+            $search = $this->_search;
+            $search->setCharset('UTF-8');
+
+            if (empty($q)) {
+                // just show hot query
+                $hot = $search->getHotQuery();
+            } else {
+                // fuzzy search
+                $search->setFuzzy($m === 'yes');
+
+                // synonym search
+                $search->setAutoSynonyms($syn === 'yes');
+
+                // set query
+                if (!empty($f) && $f != '_all') {
+                    $search->setQuery($f . ':(' . $q . ')');
+                } else {
+                    $search->setQuery($q);
+                }
+
+                // set sort
+                if (($pos = strrpos($s, '_')) !== false) {
+                    $sf = substr($s, 0, $pos);
+                    $st = substr($s, $pos + 1);
+                    $search->setSort($sf, $st === 'ASC');
+                }
+
+                // set offset, limit
+                $p = max(1, intval($p));
+
+                #搜索结果默认分页数量
+                $n = 15;
+                $search->setLimit($n, ($p - 1) * $n);
+
+                // get the result
+                $search_begin = microtime(true);
+                $docs         = $search->search();
+                $search_cost  = microtime(true) - $search_begin;
+
+                // get other result
+                $count = $search->getLastCount();
+                $total = $search->getDbTotal();
+
+                if ($count < 1 || $count < ceil(0.001 * $total)) {
+                    $corrected = $search->getCorrectedQuery();
+                }
+                // get related query
+                $related = $search->getRelatedQuery();
+
+                // gen pager
+                if ($count > $n) {
+                    $pb    = max($p - 5, 1);
+                    $pe    = min($pb + 10, ceil($count / $n) + 1);
+                    $pager = '';
+                    do {
+                        $pager .= ($pb == $p) ? '<li class="disabled"><a>' . $p . '</a></li>' : '<li><a href="' . $bu . '&p=' . $pb . '">' . $pb . '</a></li>';
+                    } while (++$pb < $pe);
+                }
+            }
+        } catch (XSException $e) {
+            $error = strval($e);
+        }
+        // calculate total time cost
+        $total_cost = microtime(true) - $total_begin;
+        return view('xunsou.search', compact('q', 's_' . $s, 'f_' . $f, 'm', 'syn', 'hot', 'docs', 'search', 'count', 'total', 'total_cost', 'error', 'related', 'corrected', 'search_cost', 'pager'));
+    }
+
+    /**
+     * 边输入边搜索
+     * @return [type] [description]
+     */
+    public function suggestAction()
+    {
+        $q     = $_GET['term'] ?? '';
+        $q     = get_magic_quotes_gpc() ? stripslashes($q) : $q;
+        $terms = array();
+        if (!empty($q) && strpos($q, ':') === false) {
+            try {
+                $terms = $this->_search->setCharset('UTF-8')->getExpandedQuery($q);
+            } catch (XSException $e) {
+
+            }
+        }
+        echo response_json($terms);
     }
 }

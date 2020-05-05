@@ -28,9 +28,7 @@ class IndexController extends Controller
      */
     public function indexAction($name = "Stranger")
     {
-        //1. fetch query
-        $get = $this->getRequest()->getQuery();
-        //2. fetch model
+        $get  = $this->getRequest()->getQuery();
         $user = new UserModel();
         $list = $user->list();
         return view('index.index', compact('list', 'name'));
