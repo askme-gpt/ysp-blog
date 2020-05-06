@@ -17,9 +17,8 @@ class ArticleController extends Controller
         return view('article.index', compact('data'));
     }
 
-    public function readAction($id = 0)
+    public function readAction($id)
     {
-        dd($id);
-        # code...
+        dd($id, 111);
     }
 }

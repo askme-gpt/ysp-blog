@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "774050adce232dd69dc2699da0037ef4",
+    "content-hash": "75ea9c07623550d278c84a8224e2ea8e",
     "packages": [
         {
             "name": "catfan/medoo",
@@ -195,6 +195,116 @@
                 "yii2"
             ],
             "time": "2019-11-01T02:17:32+00:00"
+        },
+        {
+            "name": "inhere/php-validate",
+            "version": "v2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inhere/php-validate.git",
+                "reference": "faf3eed28ebbd3513e240f4d51de7c4d6175a78a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inhere/php-validate/zipball/faf3eed28ebbd3513e240f4d51de7c4d6175a78a",
+                "reference": "faf3eed28ebbd3513e240f4d51de7c4d6175a78a",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">7.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Inhere\\Validate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "inhere",
+                    "email": "in.798@qq.com",
+                    "homepage": "http://www.yzone.net/"
+                }
+            ],
+            "description": "an simple validate, filter library of the php",
+            "homepage": "https://github.com/inhere/php-validate",
+            "keywords": [
+                "form-validate",
+                "library",
+                "php-library",
+                "validate",
+                "validation"
+            ],
+            "time": "2020-04-26T14:23:49+00:00"
+        },
+        {
+            "name": "inhere/sroute",
+            "version": "v3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inhere/php-srouter.git",
+                "reference": "878e3b1f654120e639a50df03cceee6c61be98ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inhere/php-srouter/zipball/878e3b1f654120e639a50df03cceee6c61be98ce",
+                "reference": "878e3b1f654120e639a50df03cceee6c61be98ce",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">7.1.0"
+            },
+            "suggest": {
+                "inhere/simple-print-tool": "Very lightweight data printing tools"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Inhere\\Route\\": "src/"
+                },
+                "files": [
+                    "src/Helper/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "inhere",
+                    "email": "in.798@qq.com",
+                    "homepage": "http://www.yzone.net/"
+                }
+            ],
+            "description": "a very lightweight and fasted request router.",
+            "homepage": "https://github.com/inhere/php-srouter",
+            "keywords": [
+                "library",
+                "php-router",
+                "route",
+                "router"
+            ],
+            "time": "2019-02-01T16:47:49+00:00"
         }
     ],
     "packages-dev": [],

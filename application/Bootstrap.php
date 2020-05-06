@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @name Bootstrap
  * @author admin
@@ -32,6 +33,10 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
     public function _initRoute(Yaf\Dispatcher $dispatcher)
     {
         //在这里注册自己的路由协议,默认使用简单路由
+        $router = $dispatcher->getRouter();
+        // $router = new RouterAdapter();
+        $router->addRoute(APPLICATION_PATH . '/conf/routes.php', new RouterAdapter());
+        // Yaf\Loader::import(APPLICATION_PATH . '/conf/routes.php');
     }
 
     public function _initView(Yaf\Dispatcher $dispatcher)
