@@ -5,9 +5,9 @@
 <meta name="googlebot" content="index,noarchive,nofollow,noodp" />
 <meta name="robots" content="index,nofollow,noarchive,noodp" />
 <title>
-@if(!empty($q))
-    "搜索："{{ strip_tags($q) }}" - "
-@endif
+<?php if (!empty($q)): ?>
+  "搜索：" <?php echo strip_tags($q); ?> " - "
+<?php endif ?>
 Demo 搜索 - Powered by xunsearch</title>
 <meta http-equiv="keywords" content="Fulltext Search Engine" />
 <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css"/>
@@ -27,32 +27,33 @@ Demo 搜索 - Powered by xunsearch</title>
   <div class="row">
   <!-- search form -->
     <div class="span12">
- 
-      <h1><a href="{{ '/xunsou/search' }}"><img src="/public/img/logo.jpg" /></a></h1>
+      <h1><a href="<?php echo '/xunsou/search'; ?>"><img src="/public/img/logo.jpg" /></a></h1>
       <form class="form-search" id="q-form" method="get">
         <div class="input-append" id="q-input">
-          <input type="text" class="span6 search-query" name="q" title="输入任意关键词皆可搜索" value="{{ htmlspecialchars($q) }}">
+          <input type="text" class="span6 search-query" name="q" title="输入任意关键词皆可搜索" value="<?php echo htmlspecialchars($q); ?>">
           <button type="submit" class="btn">搜索</button>
         </div>
         <div class="condition" id="q-options">
           <label class="radio inline">
-            <input type="radio" name="f" value="title" {{ $f=='title' ? 'checked' :'' }} />标题
+            <input type="radio" name="f" value="title" 
+            <?php echo $f=='title' ? 'checked' : ''; ?> />标题
           </label>
           <label class="radio inline">
-            <input type="radio" name="f" value="_all" {{  $f=='_all' ? 'checked' :''  }} />全文
+            <input type="radio" name="f" value="_all" 
+            <?php echo $f=='_all' ? 'checked' : ''; ?> />全文
           </label>
           <label class="checkbox inline">
-            <input type="checkbox" name="m" value="checked" {{ $m }} />模糊搜索
+            <input type="checkbox" name="m" value="checked" <?php echo $m; ?> />模糊搜索
           </label>
 
           <label class="checkbox inline">
-            <input type="checkbox" name="syn" value="checked" {{ $syn }} />同义词
+            <input type="checkbox" name="syn" value="checked" <?php echo $syn; ?> />同义词
           </label>
           按
           <select name="s" size="1">
-            <option value="relevance" {{ $s == 'relevance' ? 'selected' : '' }}>相关性</option>
-            <option value="updated_at_DESC" {{ $s == 'updated_at_DESC' ? 'selected' : '' }}>更新时间从早到晚</option>
-            <option value="updated_at_ASC" {{ $s == 'updated_at_ASC' ? 'selected' : '' }}>更新时间从晚到早</option>
+            <option value="relevance">相关性</option>
+            <option value="updated_at_DESC" <?php echo $s_updated_at_DESC ?? ''; ?>>更新时间从早到晚</option>
+            <option value="updated_at_ASC" <?php echo $s_updated_at_ASC ?? ''; ?>>更新时间从晚到早</option>
           </select>
           排序
       </div>
@@ -60,31 +61,31 @@ Demo 搜索 - Powered by xunsearch</title>
     </div>
 
     <!-- begin search result -->
-    @if(!empty($q))
+    <?php if (!empty($q)): ?>
     <div class="span12">
       <!-- neck bar -->
-      @if(!empty($error))
-      <p class="text-error"><strong>错误：</strong>{{ $error }}</p>
-    @else
-    <p class="result">大约有<b>{{ number_format($count) }}</b>项符合查询结果，库内数据总量为<b>{{ number_format($total) }}</b>项。（搜索耗时：<?php printf('%.4f', $search_cost);?>秒）</p>
-      @endif
+      <?php if (!empty($error)): ?>
+      <p class="text-error"><strong>错误：</strong><?php echo $error; ?></p>
+    <?php else: ?>
+    <p class="result">大约有<b><?php echo number_format($count); ?></b>项符合查询结果，库内数据总量为<b><?php echo number_format($total); ?></b>项。（搜索耗时：<?php printf('%.4f', $search_cost);?>秒）</p>
+      <?php endif;?>
 
       <!-- fixed query -->
-      @if(count($corrected) > 0)
+      <?php if (count($corrected) > 0): ?>
       <div class="link corrected">
         <h4>您是不是要找：</h4>
         <p>
-          @foreach ($corrected as $word)
-          <span><a href="{{ '/xunsou/search' . '?q=' . urlencode($word) }}" class="text-error">{{ $word }}</a></span>
-          @endforeach
+          <?php foreach ($corrected as $word): ?>
+          <span><a href="<?php echo '/xunsou/search' . '?q=' . urlencode($word); ?>" class="text-error"><?php echo $word; ?></a></span>
+          <?php endforeach;?>
         </p>
       </div>
-      @endif
+      <?php endif;?>
 
       <!-- empty result -->
-      @if($count === 0 && empty($error))
+      <?php if ($count === 0 && empty($error)): ?>
       <div class="demo-error">
-        <p class="text-error">找不到和 <em>{{ htmlspecialchars($q) }}</em> 相符的内容或信息。</p>
+        <p class="text-error">找不到和 <em><?php echo htmlspecialchars($q); ?></em> 相符的内容或信息。</p>
         <h5>建议您：</h5>
         <ul>
           <li>1.请检查输入字词有无错误。</li>
@@ -92,69 +93,71 @@ Demo 搜索 - Powered by xunsearch</title>
           <li>3.请改用较短、较为常见的字词。</li>
         </ul>
       </div>
-      @endif
+      <?php endif;?>
 
       <!-- result doc list -->
       <dl class="result-list">
-        @foreach ($docs as $doc)
+        <?php foreach ($docs as $doc): ?>
         <dt>
-          <a href="javascript:void(alert('id {{ $doc->id }}'));">
-            <h4>{{ $doc->rank() }}. {!! $search->highlight(htmlspecialchars($doc->title),true) !!}
-              <small>[{{ $doc->percent() }}%]</small>
+          <a href="javascript:void(alert('id <?php echo $doc->id ?>'));">
+            <h4><?php echo $doc->rank(); ?>. <?php echo $search->highlight(htmlspecialchars($doc->title),true); ?>
+              <small>[<?php echo $doc->percent(); ?>%]</small>
             </h4>
           </a>
         </dt>
         <dd>
-          <p>{!! $search->highlight(htmlspecialchars($doc->content)) !!}</p>
+          <p><?php echo $search->highlight(htmlspecialchars($doc->content)); ?></p>
           <p class="field-info text-error">
-            <span><strong>更新时间:</strong>{{ date('Y-m-d',strtotime($doc->updated_at)) }}</span>
+            <span><strong>更新时间:</strong><?php echo date('Y-m-d',strtotime($doc->updated_at)); ?></span>
           </p>
         </dd>
-        @endforeach
+        <?php endforeach;?>
       </dl>
 
       <!-- pager -->
-      @if(!empty($pager))
+      <?php if (!empty($pager)): ?>
       <div class="pagination pagination-centered">
         <ul>
-          {!! $pager !!}
+          <!--<li><a href="#">Prev</a></li>-->
+          <?php echo $pager; ?>
+          <!--<li><a href="#">Next</a></li>-->
         </ul>
       </div>
-      @endif
+      <?php endif;?>
 
     </div>
-    @endif
+    <?php endif;?>
     <!-- end search result -->
   </div>
 </div>
 
 <!-- hot search -->
-@if(count($hot) > 0)
+<?php if (count($hot) > 0): ?>
 <section class="link">
   <div class="container">
     <h4>热门搜索:</h4>
     <p>
-      @foreach ($hot as $word => $freq)
-      <span><a href="{{ '/xunsou/search' . '?q=' . urlencode($word) }}">{{ $word }}</a></span>
-      @endforeach
+      <?php foreach ($hot as $word => $freq): ?>
+      <span><a href="<?php echo '/xunsou/search' . '?q=' . urlencode($word); ?>"><?php echo $word; ?></a></span>
+      <?php endforeach;?>
     </p>
   </div>
 </section>
-@endif
+<?php endif;?>
 
 <!-- related query -->
-@if(count($related) > 0)
+<?php if (count($related) > 0): ?>
 <section class="link">
   <div class="container">
     <h4>相关搜索:</h4>
     <p>
-      @foreach ($related as $word)
-      <span><a href="{{ '/xunsou/search' . '?q=' . urlencode($word) }}">{{ $word }}</a></span>
-      @endforeach
+      <?php foreach ($related as $word): ?>
+      <span><a href="<?php echo '/xunsou/search' . '?q=' . urlencode($word); ?>"><?php echo $word; ?></a></span>
+      <?php endforeach;?>
   </p>
   </div>
 </section>
-@endif
+<?php endif;?>
 
 <!-- footer -->
 <footer>

@@ -144,10 +144,6 @@ class XunSouController extends Controller
         // recheck request parameters
         $q             = get_magic_quotes_gpc() ? stripslashes($q) : $q;
         $f             = empty($f) ? '_all' : $f;
-        ${'m_check'}   = ($m == 'yes' ? ' checked' : '');
-        ${'syn_check'} = ($syn == 'yes' ? ' checked' : '');
-        ${'s_' . $s}   = ' selected';
-        ${'f_' . $f}   = ' checked';
 
         // base url
         $bu = $this->getRequest()->uri . '?q=' . urlencode($q) . '&m=' . $m . '&f=' . $f;
@@ -168,10 +164,10 @@ class XunSouController extends Controller
                 $hot = $search->getHotQuery();
             } else {
                 // fuzzy search
-                $search->setFuzzy($m === 'yes');
+                $search->setFuzzy($m === 'checked');
 
                 // synonym search
-                $search->setAutoSynonyms($syn === 'yes');
+                $search->setAutoSynonyms($syn === 'checked');
 
                 // set query
                 if (!empty($f) && $f != '_all') {
@@ -224,7 +220,7 @@ class XunSouController extends Controller
         }
         // calculate total time cost
         $total_cost = microtime(true) - $total_begin;
-        return view('xunsou.search', compact('q', 's_' . $s, 'f_' . $f, 'm', 'syn', 'hot', 'docs', 'search', 'count', 'total', 'total_cost', 'error', 'related', 'corrected', 'search_cost', 'pager'));
+        return view('xunsou.search', compact('q', 's','f', 'm', 'syn', 'hot', 'docs', 'search', 'count', 'total', 'total_cost', 'error', 'related', 'corrected', 'search_cost', 'pager'));
     }
 
     /**
@@ -244,5 +240,12 @@ class XunSouController extends Controller
             }
         }
         echo response_json($terms);
+    }
+
+    public function __destruct()
+    {
+        $this->_index  = null;
+        $this->_doc    = null;
+        $this->_search = null;
     }
 }

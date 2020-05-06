@@ -625,3 +625,35 @@ function view($view_path, $tpl_vars = [])
     $blade = new BladeAdapter();
     return $blade->display($view_path, $tpl_vars);
 }
+
+function check_input($value)
+{
+    // 去除斜杠
+    if (get_magic_quotes_gpc()) {
+        $value = stripslashes($value);
+    }
+    // 如果不是数字则加引号
+    if (!is_numeric($value)) {
+        $value = "'" . mysql_real_escape_string($value) . "'";
+    }
+    return $value;
+}
+
+function function_dump($funcname)
+{
+    try {
+        if (is_array($funcname)) {
+            $func     = new ReflectionMethod($funcname[0], $funcname[1]);
+            $funcname = $funcname[1];
+        } else {
+            $func = new ReflectionFunction($funcname);
+        }
+    } catch (ReflectionException $e) {
+        echo $e->getMessage();
+        return;
+    }
+    $start    = $func->getStartLine() - 1;
+    $end      = $func->getEndLine() - 1;
+    $filename = $func->getFileName();
+    echo "function $funcname defined by $filename($start - $end)\n";
+}

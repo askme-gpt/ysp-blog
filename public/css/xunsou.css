@@ -93,9 +93,12 @@ footer p {
 	list-style-type: none;
 	margin-right: 8px;
 }
-.result-list h4 em {
+/*匹配到的查询加红色*/
+em {
 	color:red;
 }
+
+
 .corrected {
 	margin: 10px 0 30px;
 	padding: 10px;
