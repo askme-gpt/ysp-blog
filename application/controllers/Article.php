@@ -13,7 +13,13 @@ class ArticleController extends Controller
     public function indexAction()
     {
         $search = $this->getRequest()->getQuery('q');
-        $this->article->index();
+        $data   = $this->article->index();
+        return view('article.index', compact('data'));
+    }
 
+    public function readAction($id = 0)
+    {
+        dd($id);
+        # code...
     }
 }

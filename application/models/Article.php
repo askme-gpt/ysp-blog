@@ -10,18 +10,13 @@ class ArticleModel
     private $db;
     private $table = 'articles';
 
-    public $fillable = [
-        'id', 'user_id', 'category_id', 'title', 'tags', 'content', 'visits', 'status', 'created_at', 'updated_at',
-    ];
-
     public function __construct()
     {
         $this->db = Yaf\Registry::get('db');
     }
 
-    public function articleList($search, $offset, $limit)
+    public function index($search = '', $offset = 0, $limit = 15)
     {
-
         $list = $this->db->select($this->table, [
             "[>]users"      => ["user_id" => "id"],
             "[>]categories" => ["category_id" => "id"],
@@ -31,19 +26,15 @@ class ArticleModel
             $this->table . '.tags',
             $this->table . '.content',
             $this->table . '.visits',
-            $this->table . '.updated_at',
+            $this->table . '.created_at',
             'users.name',
             'categories.name',
-            'account.city',
-            'replyer.user_id',
-            'replyer.city',
         ], [
             $this->table . '.status' => 10,
             'ORDER'                  => [$this->table . '.id' => 'DESC'],
             'LIMIT'                  => [$offset, $limit],
         ]);
-
-        $count = $database->count($this->table, ['status' => 10]);
+        $count = $this->db->count($this->table, ['status' => 10]);
         return [
             'list'  => $list,
             'count' => $count,
