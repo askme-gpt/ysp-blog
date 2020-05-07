@@ -64,6 +64,7 @@ class ArticleModel
             $this->table . '.visits',
             $this->table . '.like',
             $this->table . '.created_at',
+            $this->table . '.updated_at',
             'users.name',
             'categories.name',
         ], [
@@ -74,16 +75,19 @@ class ArticleModel
 
     public function findArticleComments($id)
     {
-        $comments = $this->db->get($this->table, [
-            "[>]users"   => ["user_id" => "id"],
-            "[>]replies" => ["article_id" => "id"],
+        $comments = $this->db->select($this->table, [
+            "[>]replies" => ["id" => "article_id"],
+            "[>]users"   => ["replies.user_id" => "id"],
         ], [
             'users.name',
+            'replies.id',
+            'replies.like',
+            'replies.created_at',
             'replies.content',
         ], [
-            $this->table . '.id'     => $id,
-            $this->table . '.status' => 10,
+            'replies.article_id'     => $id,
             'replies.status'         => 10,
+            $this->table . '.status' => 10,
         ]);
         return $comments;
     }

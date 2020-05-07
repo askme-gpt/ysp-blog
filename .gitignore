@@ -1,4 +1,5 @@
 /vendor/
+/public/upload
 /conf/application.ini
 /conf/xunsou.ini
 /application/cache/

@@ -10,3 +10,7 @@ $router->group('/article', function ($router) {
     $router->get('/index', 'Article@index');
     $router->get('read/{id}', 'Article@read');
 });
+
+$router->group('/tool', function ($router) {
+    $router->get('/uploadImage', 'Tool@uploadImage');
+});

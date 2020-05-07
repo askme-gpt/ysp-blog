@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/lib/layui-v2.5.6/css/layui.css">
     <link rel="stylesheet" href="/public/css/mian.css">
+    @yield('css')
+
 </head>
 <body class="lay-blog">
     @include('layout.front_header')
@@ -18,5 +20,7 @@
           base: '/public/js/' 
         }).use('blog'); 
     </script>
+    
+    @yield('js')
 </body>
 </html>

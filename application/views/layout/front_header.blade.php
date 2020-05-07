@@ -1,7 +1,7 @@
 <div class="header">
     <div class="header-wrap">
         <h1 class="logo pull-left">
-            <a href="index.html">
+            <a href="/index">
                 <img src="/public/img/logo.png" alt="" class="logo-img">
                 <img src="/public/img/logo-text.png" alt="" class="logo-text">
             </a>
@@ -17,6 +17,7 @@
         <div class="blog-nav pull-right">
             <ul class="layui-nav pull-left">
               <li class="layui-nav-item layui-this"><a href="/index">首页</a></li>
+              <li class="layui-nav-item"><a href="/article/add">写文章</a></li>
               <li class="layui-nav-item"><a href="/message">留言</a></li>
               <li class="layui-nav-item"><a href="/about">关于</a></li>
             </ul>
@@ -31,8 +32,13 @@
         </div>
     </div>
     <ul class="pop-nav" id="pop-nav">
-        <li><a href="index.html">首页</a></li>
-        <li><a href="message.html">留言</a></li>
-        <li><a href="about.html">关于</a></li>
+        <li><a href="/index">首页</a></li>
+        <li><a href="/article/add">写文章</a></li>
+        <li><a href="/message">留言</a></li>
+        <li><a href="/about">关于</a></li>
     </ul>
 </div>
+
+<script>
+    // alert(1231);
+</script>

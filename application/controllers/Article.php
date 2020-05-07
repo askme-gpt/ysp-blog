@@ -22,4 +22,14 @@ class ArticleController extends Controller
         $data = $this->article->articleInfo($id);
         return view('article.read', $data);
     }
+
+    public function addAction()
+    {
+        return view('article.add');
+    }
+
+    public function createAction()
+    {
+        dd($_POST);
+    }
 }
