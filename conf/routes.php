@@ -2,17 +2,11 @@
 use Inhere\Route\Router;
 
 $router = new Router();
-// 路由组
-$router->config([
-    'ignoreLastSlash'     => true,
-    'autoRoute'           => 1,
-    'controllerNamespace' => '\\',
-    'controllerSuffix'    => 'Controller',
-    'actionSuffix'        => 'Action',
-]);
+
+$router->get('/index', 'Article@index');
 
 $router->group('/article', function ($router) {
-    $router->get('/', 'ArticleController::class@index');
-    $router->get('/index', 'ArticleController::class@index');
-    $router->get('/read/{id}', 'ArticleController::class@read');
+    $router->get('/', 'Article@index');
+    $router->get('/index', 'Article@index');
+    $router->get('read/{id}', 'Article@read');
 });

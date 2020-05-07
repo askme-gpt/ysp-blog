@@ -32,16 +32,14 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
 
     public function _initRoute(Yaf\Dispatcher $dispatcher)
     {
-        //在这里注册自己的路由协议,默认使用简单路由
-        $router = $dispatcher->getRouter();
-        // $router = new RouterAdapter();
-        $router->addRoute(APPLICATION_PATH . '/conf/routes.php', new RouterAdapter());
-        // Yaf\Loader::import(APPLICATION_PATH . '/conf/routes.php');
+        $router    = $dispatcher->getRouter();
+        $my_router = new RouterAdapter();
+        // 要增加的路由协议的名字,要增加的路由协议, Yaf_Route_Interface的一个实例
+        $router->addRoute('my_route', $my_router);
     }
 
     public function _initView(Yaf\Dispatcher $dispatcher)
     {
-        // 在这里注册自己的view控制器，例如smarty,firekylin
         $blade = new BladeAdapter();
         $dispatcher::getInstance()->setView($blade);
     }
