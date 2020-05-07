@@ -51,6 +51,52 @@ class ArticleModel
         return true;
     }
 
+    public function findArticle($id)
+    {
+        $article = $this->db->get($this->table, [
+            "[>]users"      => ["user_id" => "id"],
+            "[>]categories" => ["category_id" => "id"],
+        ], [
+            $this->table . '.id',
+            $this->table . '.title',
+            $this->table . '.tags',
+            $this->table . '.content',
+            $this->table . '.visits',
+            $this->table . '.like',
+            $this->table . '.created_at',
+            'users.name',
+            'categories.name',
+        ], [
+            $this->table . '.id' => $id,
+        ]);
+        return $article;
+    }
+
+    public function findArticleComments($id)
+    {
+        $comments = $this->db->get($this->table, [
+            "[>]users"   => ["user_id" => "id"],
+            "[>]replies" => ["article_id" => "id"],
+        ], [
+            'users.name',
+            'replies.content',
+        ], [
+            $this->table . '.id'     => $id,
+            $this->table . '.status' => 10,
+            'replies.status'         => 10,
+        ]);
+        return $comments;
+    }
+
+    public function articleInfo($id)
+    {
+        $data = [
+            'data'     => $this->findArticle($id),
+            'comments' => $this->findArticleComments($id),
+        ];
+        return $data;
+    }
+
     public function paginate($value = '')
     {
 

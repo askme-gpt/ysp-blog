@@ -16,9 +16,9 @@
         </form>
         <div class="blog-nav pull-right">
             <ul class="layui-nav pull-left">
-              <li class="layui-nav-item layui-this"><a href="index.html">首页</a></li>
-              <li class="layui-nav-item"><a href="message.html">留言</a></li>
-              <li class="layui-nav-item"><a href="about.html">关于</a></li>
+              <li class="layui-nav-item layui-this"><a href="/index">首页</a></li>
+              <li class="layui-nav-item"><a href="/message">留言</a></li>
+              <li class="layui-nav-item"><a href="/about">关于</a></li>
             </ul>
             <a href="#" class="personal pull-left">
                 <i class="layui-icon layui-icon-username"></i>

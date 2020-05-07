@@ -19,6 +19,7 @@ class ArticleController extends Controller
 
     public function readAction($id)
     {
-        dd($id, 111);
+        $data = $this->article->articleInfo($id);
+        return view('article.read', $data);
     }
 }

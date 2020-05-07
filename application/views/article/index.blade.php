@@ -18,11 +18,7 @@
                         	<span class="mar-left">阅读数：{{ $element['visits'] }}</span>
                         </h5>
                         <p>{{ $element['content'] }}</p>
-                        <img src="../res/static/images/item.png" alt="">
-                    </div>
-                    <div class="comment count">
-                        <a href="details.html#comment">评论</a>
-                        <a href="javascript:;" class="like">点赞</a>
+                        <img src="/public/img/item.png" alt="">
                     </div>
                 </div>
             @endforeach
