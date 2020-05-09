@@ -1,15 +1,27 @@
 @extends('layout.front')
+@section('css')
+<style>
+    
+</style>
+@endsection
 
+{{-- 改写layuiform元素样式 --}}
+<link href="/public/lib/layui-v2.5.6/css/form.css" rel="stylesheet">
 <link href="/public/lib/simplemde-1.11.2/simplemde.min.css" rel="stylesheet">
 <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.0.1/highlight.min.js"></script>
-<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.0.1/styles/monokai-sublime.min.css" rel="stylesheet">
+{{-- 代码高亮样式 --}}
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.0.1/styles/atelier-forest-dark.min.css" rel="stylesheet">
 
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="/public/lib/simplemde-1.11.2/simplemde.min.js"></script>
+{{-- 上传图片 start --}}
 <script src="/public/lib/simplemde-1.11.2/inline-attachment.min.js"></script>
 <script src="/public/lib/simplemde-1.11.2/codemirror-4.inline-attachment.min.js"></script>
-
+{{-- 上传图片 end --}}
+{{-- 代码高亮需要的js --}}
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.0.1/highlight.min.js"></script>
+{{-- 代码渲染需要的js --}}
+{{-- <script src="https://cdn.bootcdn.net/ajax/libs/marked/1.0.0/marked.min.js"></script> --}}
 @section('content')
 <div class="container-wrap">
     <div class="container">
@@ -20,22 +32,52 @@
         </div>
 
         <form class="layui-form" action="/article/create" method="post">
+
           <div class="layui-form-item">
-              <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+              <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input">
           </div>
+
+          <div class="layui-form-item">
+              <input type="radio" name="type" value="10" title="原创">
+              <input type="radio" name="type" value="20" title="转载">
+              <input type="radio" name="type" value="30" title="私密">
+          </div>
+
+          @if ($tags)
+              <div class="layui-form-item">
+                <select name="tags[]" multiple="" lay-search="" lay-verify="required">
+                    <option value=""></option>
+                    @foreach ($tags as $tag)
+                        <option value="{{ $tag['id'] }}">{{ $tag['name'] }}</option>
+                    @endforeach
+                </select>
+              </div>
+          @endif
+
+          @if ($categories)
+              @cache(1,86400)
+              <div class="layui-form-item">
+                <select name="category_id" lay-search="" lay-verify="required">
+                    @foreach ($categories as $category)
+                        <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                    @endforeach
+                </select>
+              </div>
+              @endcache()
+          @endif
 
           <div class="layui-form-item layui-form-text">
-              <textarea placeholder="请输入内容" name="content" class="layui-textarea" id="demo"></textarea>
+              <textarea placeholder="请输入内容" name="content" id="simplemd"></textarea>
           </div>
 
           <div class="layui-form-item">
-              <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+              <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
+              <button type="submit" class="layui-btn layui-btn-danger" lay-submit="" lay-filter="demo2">暂存</button>
               <button type="reset" class="layui-btn layui-btn-primary">重置</button>
           </div>
         </form>
     </div>
 </div>
-
 
 @endsection
 
@@ -47,16 +89,30 @@ https://learnku.com/articles/31749
 https://github.com/sparksuite/simplemde-markdown-editor
 --}}
 <script>
-    $(document).ready(function() {
-        var editor = new SimpleMDE({
-        element: document.getElementById("demo"),
+$(document).ready(function() {
+    hljs.initHighlightingOnLoad();
+
+    layui.use(['layer', 'form'], function(){
+      var layer = layui.layer
+      ,form = layui.form;
+
+      // form.on('submit(demo1)', function(data){
+      //     layer.alert(JSON.stringify(data.field), {
+      //       title: '最终的提交信息'
+      //     });
+      //     // return false;
+      //   });
+    });
+
+    var editor = new SimpleMDE({
+        element: document.getElementById("simplemd"),
         spellChecker: false,
         autofocus: true,
         autoDownloadFontAwesome: false,
         placeholder: "下笔如有神...",
         autosave: {
             enabled: true,
-            uniqueId: "demo",
+            uniqueId: "simplemd",
             delay: 1000,
         },
         tabSize: 4,
@@ -67,8 +123,7 @@ https://github.com/sparksuite/simplemde-markdown-editor
         },
     });
 
-    // editor.toggleSideBySide()//打开实时全屏预览
-
+    editor.value('# Marked in browser\n\nRendered by **marked**.');
     var inlineAttachmentConfig = {
         uploadUrl: '/tool/uploadImage',               //后端上传图片地址
         uploadFieldName: 'upload_file',          //上传的文件名
@@ -84,10 +139,6 @@ https://github.com/sparksuite/simplemde-markdown-editor
     inlineAttachment.editors.codemirror4.attach(editor.codemirror, inlineAttachmentConfig);
 });
 </script>
-@endsection
-{{-- 
-$('#markdown-editor').on('paste', function(event) {
-    // sth
-}) --}}
 
+@endsection
 

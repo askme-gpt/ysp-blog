@@ -20,6 +20,8 @@
           base: '/public/js/' 
         }).use('blog'); 
     </script>
+
+    {{-- 下拉框多选 https://yelog.org/layui-select-multiple/ --}}
     
     @yield('js')
 </body>

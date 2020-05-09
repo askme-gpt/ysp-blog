@@ -657,3 +657,9 @@ function function_dump($funcname)
     $filename = $func->getFileName();
     echo "function $funcname defined by $filename($start - $end)\n";
 }
+
+function redirect(string $url, array $params = [])
+{
+    $url = $params ? $url . '?' . http_build_query($params) : $url;
+    header('Location: ' . $url);
+}

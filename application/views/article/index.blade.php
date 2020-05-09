@@ -17,7 +17,7 @@
                         	<span class="mar-left">作者：{{ $element['name'] }}</span>
                         	<span class="mar-left">阅读数：{{ $element['visits'] }}</span>
                         </h5>
-                        <p>{{ $element['content'] }}</p>
+                        <p id="content">{{ $element['content'] }}</p>
                         <img src="/public/img/item.png" alt="">
                     </div>
                 </div>
@@ -29,12 +29,20 @@
 
     </div>
 </div>
+<ul class="layui-fixbar">
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="display: list-item;"></li>
+</ul>
 @endsection
 
-<ul class="layui-fixbar">
-	<li class="layui-icon layui-fixbar-top" lay-type="top" style="display: list-item;"></li>
-</ul>
 
+
+@section('js')
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/1.0.0/marked.min.js"></script>
+    <script>
+        document.getElementById('content').innerHTML =
+        marked('# Marked in browser\n\nRendered by **marked**.');
+    </script>
+@endsection
 
 
 

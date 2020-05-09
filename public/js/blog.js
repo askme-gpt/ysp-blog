@@ -120,7 +120,7 @@ layui.define(['element', 'form','laypage','jquery','laytpl'],function(exports){
     //模拟数据
     ,data = {
       username: '闲心'
-      ,avatar: '../res/static/images/info-img.png'
+      ,avatar: '/public/img/info-img.png'
       ,praise: 0
       ,content: content
     };

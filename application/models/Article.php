@@ -1,18 +1,22 @@
 <?php
 
-/**
- * @name ArticleModel
- * @desc sample数据获取类, 可以访问数据库，文件，其它系统等
- * @author admin
- */
-class ArticleModel
+class ArticleModel extends BaseModel
 {
-    private $db;
-    private $table = 'articles';
+    public $table = 'articles';
 
-    public function __construct()
+    /**
+     * 规则验证
+     * https://github.com/inhere/php-validate/wiki/config-rules-like-laravel
+     * @return [type] [description]
+     */
+    public function rules(): array
     {
-        $this->db = Yaf\Registry::get('db');
+        return [
+            ['user_id,title,type,content,category_id,tags', 'required'],
+            ['type', 'in', [10, 20, 30]],
+            ['content', 'string', 'min' => 2, 'max' => 16500],
+            ['category_id', 'number'],
+        ];
     }
 
     public function index($search = '', $offset = 0, $limit = 15)
@@ -46,9 +50,17 @@ class ArticleModel
         return $this->db->select($this->table, ['id', 'title', 'content', 'updated_at'], ['status' => 10]);
     }
 
-    public function insertArticle($arrInfo)
+    /**
+     * 插入数据
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    public function insertArticle($data)
     {
-        return true;
+        // $sql = $this->db->debug()->insert($this->table, $data);
+        // dd($this->table, $data, $sql);
+
+        // return $this->db->id();
     }
 
     public function findArticle($id)

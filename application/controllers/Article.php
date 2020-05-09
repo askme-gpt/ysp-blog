@@ -1,4 +1,6 @@
 <?php
+use Inhere\Validate\FieldValidation;
+use Inhere\Validate\Validation;
 use Yaf\Controller_Abstract as Controller;
 
 class ArticleController extends Controller
@@ -17,19 +19,33 @@ class ArticleController extends Controller
         return view('article.index', compact('data'));
     }
 
-    public function readAction($id)
+    public function readAction()
     {
+        $id   = $this->getRequest()->getQuery('id');
         $data = $this->article->articleInfo($id);
         return view('article.read', $data);
     }
 
+    /**
+     * 文章添加页面
+     */
     public function addAction()
     {
-        return view('article.add');
+        $tag        = new TagModel();
+        $category   = new CategoryModel();
+        $tags       = $tag->index();
+        $categories = $category->index();
+        return view('article.add', compact('categories', 'tags'));
     }
 
     public function createAction()
     {
-        dd($_POST);
+        $_POST['user_id'] = 1;
+        $_POST['content'] = json_encode($_POST['content'], 384);
+        $this->article->load($_POST)->atScene('create');
+        if (!$insert_id = $this->article->create()) {
+            exit($this->article->firstError());
+        }
+        return redirect("/article/read", ['id' => $insert_id]);
     }
 }
