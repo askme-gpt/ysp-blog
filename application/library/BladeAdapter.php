@@ -1,11 +1,10 @@
 <?php
+
+// use eftec\bladeone\BladeOne;
+
 class BladeAdapter implements Yaf\View_Interface
 {
-    protected $_tpl_vars;
-    /**
-     * Smarty object
-     * @var Smarty
-     */
+
     public $_blade;
 
     /**
@@ -22,8 +21,17 @@ class BladeAdapter implements Yaf\View_Interface
         $cache       = $bladeConfig['cache_dir'] ?? '';
         // 使用缓存
         $this->_blade = new BladeCache($views, $cache);
+
         // 不使用缓存
         // $this->_blade = new BladeOne($views, $cache, BladeOne::MODE_AUTO);
+        $this->_blade->setInjectResolver(function ($className) {
+            // Custom logic for resolving
+            return new $className();
+        });
+
+        // 全局变量
+        // $this->_blade->share('lang', 'test');
+
         foreach ($bladeConfig as $key => $value) {
             $this->_blade->$key = $value;
         }

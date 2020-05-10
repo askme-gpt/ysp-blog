@@ -10,16 +10,6 @@ use Yaf\Controller_Abstract as Controller;
  */
 class IndexController extends Controller
 {
-    /**
-     * 默认初始化方法，如果不需要，可以删除掉这个方法
-     * 如果这个方法被定义，那么在Controller被构造以后，Yaf会调用这个方法
-     */
-    public function init()
-    {
-        if (wantJson()) {
-            Yaf\Dispatcher::getInstance()->disableView();
-        }
-    }
 
     /**
      * 默认动作
@@ -31,7 +21,8 @@ class IndexController extends Controller
         $get  = $this->getRequest()->getQuery();
         $user = new UserModel();
         $list = $user->list();
-        return view('index.index', compact('list', 'name'));
+        // echo json_encode($list, 320);
+        // return view('index.index', compact('list', 'name'));
     }
 
 }

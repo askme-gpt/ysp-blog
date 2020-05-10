@@ -1,8 +1,15 @@
 @extends('layout.front')
 @section('css')
     <link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.0.1/styles/solarized-dark.min.css" rel="stylesheet">
-    @endsection
+	<style>
+		/*content内容里面的图片宽度和边框一致*/
+		#content img{
+			width: 100%;
+		}
+	</style>
+@endsection
 @section('content')
+
 
 	<div class="container-wrap">
 		<div class="container container-message container-details">
@@ -10,23 +17,39 @@
 				@if ($data)
 					{{-- 文章详情 start--}}
 					<div class="item">
-						<div class="item-box  layer-photos-demo1 layer-photos-demo">
+						<div class="item-box layer-photos-demo1 layer-photos-demo">
 							<h3>{{ $data['title'] }}</h3>
 							<h5>
-								<span>发布于：{{ $data['created_at'] }}</span>
+								<span>发布于：{{ date('Y-m-d',strtotime($data['created_at'])) }}</span>
 								<span class="mar-left">作者：{{ $data['name'] }}</span>
 								<span class="mar-left">阅读数：{{ $data['visits'] }}</span>
-								<span class="like pull-right">
-									<i class="layui-icon layui-icon-praise"></i>
-									<em>{{ $data['like'] }}</em>
-								</span>
+								@php
+									$color=['cyan', 'orange', 'blue'];
+									$tags=[
+										['name'=>'php','id'=>1],
+										['name'=>'nginx','id'=>2],
+									];
+								@endphp
+								@if ($tags && is_array($tags))
+									<span class="mar-left">标签：
+									@foreach ($tags as $key => $element)
+										<a class="layui-badge layui-bg-{{ $color[$key] }}" 
+										href="/article/category?cat={{ $element['id'] }}">
+										{{ $element['name'] }}</a>
+									@endforeach
+									</span>
+								@endif
 							</h5>
 							<p id="content"></p>
 							<div class="count layui-clear">
 								@if ($data['updated_at'] && $data['updated_at'] !== $data['created_at'])
 									<span>更新于：{{ $data['updated_at'] }}</span>
 								@endif
-								<a href="/reply" class="pull-right">写评论</a>
+								<span class="like pull-right mar-left">
+									<i class="layui-icon layui-icon-praise"></i>
+									<em>{{ $data['like'] }}</em>
+								</span>
+								<a href="/reply" class="pull-right" style="">写评论</a>
 							</div>
 						</div>
 					</div>	

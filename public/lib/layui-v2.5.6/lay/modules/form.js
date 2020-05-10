@@ -1,9 +1,4 @@
-/**
- @Name：layui.form 表单组件
- @Author：贤心
- @License：MIT
- */
-
+// https://github.com/yelog/layui-select-multiple
 layui.define('layer', function(exports){
     "use strict";
 

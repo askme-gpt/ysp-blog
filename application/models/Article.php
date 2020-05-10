@@ -51,18 +51,10 @@ class ArticleModel extends BaseModel
     }
 
     /**
-     * 插入数据
-     * @param  [type] $data [description]
-     * @return [type]       [description]
+     * 查找文章相关信息
+     * @param  [type] $id [description]
+     * @return [type]     [description]
      */
-    public function insertArticle($data)
-    {
-        // $sql = $this->db->debug()->insert($this->table, $data);
-        // dd($this->table, $data, $sql);
-
-        // return $this->db->id();
-    }
-
     public function findArticle($id)
     {
         $article = $this->db->get($this->table, [
@@ -80,11 +72,17 @@ class ArticleModel extends BaseModel
             'users.name',
             'categories.name',
         ], [
-            $this->table . '.id' => $id,
+            $this->table . '.id'     => $id,
+            $this->table . '.status' => 10,
         ]);
         return $article;
     }
 
+    /**
+     * 查找文章评论
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function findArticleComments($id)
     {
         $comments = $this->db->select($this->table, [
@@ -111,6 +109,38 @@ class ArticleModel extends BaseModel
             'comments' => $this->findArticleComments($id),
         ];
         return $data;
+    }
+
+    /**
+     * [articleByCategory description]
+     * @param  [type] $category_id [description]
+     * @return [type]              [description]
+     */
+    public function articleByCategory($category_id, $offset = 0, $limit = 15)
+    {
+        $list = $this->db->select($this->table, [
+            "[>]users"      => ["user_id" => "id"],
+            "[>]categories" => ["category_id" => "id"],
+        ], [
+            $this->table . '.id',
+            $this->table . '.title',
+            $this->table . '.tags',
+            $this->table . '.content',
+            $this->table . '.visits',
+            $this->table . '.created_at',
+            'users.name',
+            'categories.name',
+        ], [
+            $this->table . '.status'      => 10,
+            $this->table . '.category_id' => $category_id,
+            'ORDER'                       => [$this->table . '.id' => 'DESC'],
+            'LIMIT'                       => [$offset, $limit],
+        ]);
+        $count = $this->db->count($this->table, ['status' => 10, 'category_id' => $category_id]);
+        return [
+            'list'  => $list,
+            'count' => $count,
+        ];
     }
 
     public function paginate($value = '')

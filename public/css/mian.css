@@ -286,8 +286,6 @@ body{
 /* end about */
 
 
-
-
 /*start comment*/
 .container-comment .btnbox{
 	text-align: right;
@@ -312,6 +310,4 @@ body{
 .mar-left{
 	margin-left: 50px;
 }
-pre{
-	
-}
+

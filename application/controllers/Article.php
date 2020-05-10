@@ -42,10 +42,20 @@ class ArticleController extends Controller
     {
         $_POST['user_id'] = 1;
         $_POST['content'] = json_encode($_POST['content'], 384);
+        $_POST['tags']    = join($_POST['tags'], ',');
+        dd($_POST);
         $this->article->load($_POST)->atScene('create');
         if (!$insert_id = $this->article->create()) {
             exit($this->article->firstError());
         }
         return redirect("/article/read", ['id' => $insert_id]);
+    }
+
+    public function categoryAction()
+    {
+        $category_id = $this->getRequest()->getQuery('cat');
+        $data        = $this->article->articleByCategory($category_id);
+        return view('article.index', compact('data'));
+
     }
 }

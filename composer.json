@@ -4,7 +4,8 @@
         "catfan/medoo": "^1.7",
         "hightman/xunsearch": "^1.4",
         "inhere/php-validate": "^2.8",
-        "inhere/sroute": "^3.0"
+        "inhere/sroute": "^3.0",
+        "phpmailer/phpmailer": "^6.1"
     },
     "autoload": {
         "files": [

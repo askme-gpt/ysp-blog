@@ -10,14 +10,15 @@
                 <div class="item">
                     <div class="item-box layer-photos-demo1 layer-photos-demo">
                         <h3>
-                        	<a href='/article/read/{{ $element['id'] }}'>{{ $element['title'] }}</a>
+                        	<a href='/article/read?id={{ $element['id'] }}'>{{ $element['title'] }}</a>
                         </h3>
                         <h5>
                         	<span>发布于：{{ $element['created_at'] }}</span>
                         	<span class="mar-left">作者：{{ $element['name'] }}</span>
                         	<span class="mar-left">阅读数：{{ $element['visits'] }}</span>
                         </h5>
-                        <p id="content">{{ $element['content'] }}</p>
+
+                        <p id="content">{{ substr(str_replace(['#','|','![图片描述]','![',']','\r','\n','"','`','-','*',':'], '', strip_tags($element['content'])), 0,300) }}</p>
                         <img src="/public/img/item.png" alt="">
                     </div>
                 </div>

@@ -30,13 +30,15 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
         // $dispatcher->registerPlugin($objSamplePlugin);
     }
 
-    public function _initRoute(Yaf\Dispatcher $dispatcher)
-    {
-        $router    = $dispatcher->getRouter();
-        $my_router = new RouterAdapter();
-        // 要增加的路由协议的名字,要增加的路由协议, Yaf_Route_Interface的一个实例
-        $router->addRoute('my_route', $my_router);
-    }
+    // 暂时不使用route
+    // public function _initRoute(Yaf\Dispatcher $dispatcher)
+    // {
+    //     $dispatcher->setDefaultModule("Index")->setDefaultController("Article")->setDefaultAction("index");
+    //     $router    = $dispatcher->getRouter();
+    //     $my_router = new RouterAdapter();
+    //     // 要增加的路由协议的名字,要增加的路由协议, Yaf_Route_Interface的一个实例
+    //     $router->addRoute('my_route', $my_router);
+    // }
 
     public function _initView(Yaf\Dispatcher $dispatcher)
     {
@@ -61,5 +63,10 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
             ],
         ];
         Yaf\Registry::set('db', new \Medoo\Medoo($option));
+    }
+
+    public function __initRedis()
+    {
+        # code...
     }
 }

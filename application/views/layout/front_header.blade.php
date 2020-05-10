@@ -1,3 +1,9 @@
+@inject('menu','MenuModel')
+@php
+    $active = rtrim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/');
+    $navs = $menu->index();
+@endphp
+
 <div class="header">
     <div class="header-wrap">
         <h1 class="logo pull-left">
@@ -16,10 +22,12 @@
         </form>
         <div class="blog-nav pull-right">
             <ul class="layui-nav pull-left">
-              <li class="layui-nav-item layui-this"><a href="/index">首页</a></li>
-              <li class="layui-nav-item"><a href="/article/add">写文章</a></li>
-              <li class="layui-nav-item"><a href="/message">留言</a></li>
-              <li class="layui-nav-item"><a href="/about">关于</a></li>
+                @foreach ($navs as $element)
+                  <li class="layui-nav-item 
+                  {{ $active== $element['path'] ? 'layui-this' : '' }}
+                  ">
+                  <a href="{{ $element['path'] }}">{{ $element['name'] }}</a></li>
+                @endforeach
             </ul>
             <a href="#" class="personal pull-left">
                 <i class="layui-icon layui-icon-username"></i>
@@ -32,10 +40,10 @@
         </div>
     </div>
     <ul class="pop-nav" id="pop-nav">
-        <li><a href="/index">首页</a></li>
-        <li><a href="/article/add">写文章</a></li>
-        <li><a href="/message">留言</a></li>
-        <li><a href="/about">关于</a></li>
+        <li><a href="/index" >首页</a></li>
+        <li><a href="/article/add" >写文章</a></li>
+        <li><a href="/message" >留言</a></li>
+        <li><a href="/about" >关于</a></li>
     </ul>
 </div>
 
