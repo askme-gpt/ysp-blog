@@ -19,8 +19,19 @@ class ArticleModel extends BaseModel
         ];
     }
 
-    public function index($search = '', $offset = 0, $limit = 15)
+    public function index($search = '', $page = 0, $limit = 15)
     {
+        $conditions = [
+            $this->table . '.status' => 10,
+            "OR"                     => [
+                $this->table . '.title[~]'   => $search,
+                $this->table . '.content[~]' => $search,
+            ],
+        ];
+        $limit = [
+            'ORDER' => [$this->table . '.id' => 'DESC'],
+            'LIMIT' => [($page - 1) * $limit, $limit],
+        ];
         $list = $this->db->select($this->table, [
             "[>]users"      => ["user_id" => "id"],
             "[>]categories" => ["category_id" => "id"],
@@ -33,12 +44,8 @@ class ArticleModel extends BaseModel
             $this->table . '.created_at',
             'users.name',
             'categories.name',
-        ], [
-            $this->table . '.status' => 10,
-            'ORDER'                  => [$this->table . '.id' => 'DESC'],
-            'LIMIT'                  => [$offset, $limit],
-        ]);
-        $count = $this->db->count($this->table, ['status' => 10]);
+        ], array_merge($conditions, $limit));
+        $count = $this->db->count($this->table, $conditions);
         return [
             'list'  => $list,
             'count' => $count,
@@ -47,34 +54,43 @@ class ArticleModel extends BaseModel
 
     public function allArticle()
     {
-        return $this->db->select($this->table, ['id', 'title', 'content', 'updated_at'], ['status' => 10]);
+        return $this->db->select(
+            $this->table,
+            ['id', 'title', 'content', 'updated_at'],
+            ['status' => 10]
+        );
     }
 
     /**
-     * 查找文章相关信息
+     * 根据id查找文章相关信息
      * @param  [type] $id [description]
      * @return [type]     [description]
      */
     public function findArticle($id)
     {
-        $article = $this->db->get($this->table, [
-            "[>]users"      => ["user_id" => "id"],
-            "[>]categories" => ["category_id" => "id"],
-        ], [
-            $this->table . '.id',
-            $this->table . '.title',
-            $this->table . '.tags',
-            $this->table . '.content',
-            $this->table . '.visits',
-            $this->table . '.like',
-            $this->table . '.created_at',
-            $this->table . '.updated_at',
-            'users.name',
-            'categories.name',
-        ], [
-            $this->table . '.id'     => $id,
-            $this->table . '.status' => 10,
-        ]);
+        $article = $this->db->get(
+            $this->table,
+            [
+                "[>]users"      => ["user_id" => "id"],
+                "[>]categories" => ["category_id" => "id"],
+            ],
+            [
+                $this->table . '.id',
+                $this->table . '.title',
+                $this->table . '.tags',
+                $this->table . '.content',
+                $this->table . '.visits',
+                $this->table . '.like',
+                $this->table . '.created_at',
+                $this->table . '.updated_at',
+                'users.name',
+                'categories.name',
+            ],
+            [
+                $this->table . '.id'     => $id,
+                $this->table . '.status' => 10,
+            ]
+        );
         return $article;
     }
 
@@ -104,11 +120,19 @@ class ArticleModel extends BaseModel
 
     public function articleInfo($id)
     {
-        $data = [
-            'data'     => $this->findArticle($id),
+        $article = $this->findArticle($id);
+        $data    = [
+            'data'     => $article,
             'comments' => $this->findArticleComments($id),
+            'tags'     => $this->articleTags($article['tags'] ?? ''),
         ];
         return $data;
+    }
+
+    public function articleTags($tag_ids)
+    {
+        $tag = new TagModel();
+        return $tag->findTagsById($tag_ids);
     }
 
     /**

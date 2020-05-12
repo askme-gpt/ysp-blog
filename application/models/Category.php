@@ -10,7 +10,7 @@ class CategoryModel
         $this->db = Yaf\Registry::get('db');
     }
 
-    public function index()
+    public function index($offset = 0, $limit = 15)
     {
         $list = $this->db->select($this->table, [
             $this->table . '.id',
@@ -21,6 +21,7 @@ class CategoryModel
                 $this->table . '.index' => 'DESC',
                 $this->table . '.id'    => 'asc',
             ],
+            'LIMIT'                  => [$offset, $limit],
         ]);
         return $list;
     }

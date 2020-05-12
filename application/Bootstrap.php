@@ -23,12 +23,12 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
         Yaf\Loader::import(APPLICATION_PATH . '/vendor/autoload.php');
     }
 
-    public function _initPlugin(Yaf\Dispatcher $dispatcher)
-    {
-        //注册一个插件
-        // $objSamplePlugin = new SamplePlugin();
-        // $dispatcher->registerPlugin($objSamplePlugin);
-    }
+    // public function _initPlugin(Yaf\Dispatcher $dispatcher)
+    // {
+    //     //注册一个插件
+    //     $objSamplePlugin = new SamplePlugin();
+    //     $dispatcher->registerPlugin($objSamplePlugin);
+    // }
 
     // 暂时不使用route
     // public function _initRoute(Yaf\Dispatcher $dispatcher)

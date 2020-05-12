@@ -10,7 +10,6 @@
 @endsection
 @section('content')
 
-
 	<div class="container-wrap">
 		<div class="container container-message container-details">
 			<div class="contar-wrap">
@@ -20,21 +19,18 @@
 						<div class="item-box layer-photos-demo1 layer-photos-demo">
 							<h3>{{ $data['title'] }}</h3>
 							<h5>
-								<span>发布于：{{ date('Y-m-d',strtotime($data['created_at'])) }}</span>
+								<span>发布于：{{ $data['created_at'] }}</span>
 								<span class="mar-left">作者：{{ $data['name'] }}</span>
 								<span class="mar-left">阅读数：{{ $data['visits'] }}</span>
-								@php
-									$color=['cyan', 'orange', 'blue'];
-									$tags=[
-										['name'=>'php','id'=>1],
-										['name'=>'nginx','id'=>2],
-									];
-								@endphp
-								@if ($tags && is_array($tags))
+
+								@if (isset($tags) && is_array($tags))
+									@php
+										$color=['cyan', 'orange', 'blue'];
+									@endphp
 									<span class="mar-left">标签：
 									@foreach ($tags as $key => $element)
 										<a class="layui-badge layui-bg-{{ $color[$key] }}" 
-										href="/article/category?cat={{ $element['id'] }}">
+										href="/article/tag?tid={{ $element['id'] }}">
 										{{ $element['name'] }}</a>
 									@endforeach
 									</span>

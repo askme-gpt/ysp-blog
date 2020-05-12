@@ -1,12 +1,14 @@
 <?php
 
+use Medoo\Medoo;
+
 // use eftec\bladeone\BladeOne;
 
 class BladeAdapter implements Yaf\View_Interface
 {
 
     public $_blade;
-
+    public $_variables;
     /**
      * Constructor
      *
@@ -20,7 +22,8 @@ class BladeAdapter implements Yaf\View_Interface
         $views       = $bladeConfig['template_dir'] ?? '';
         $cache       = $bladeConfig['cache_dir'] ?? '';
         // 使用缓存
-        $this->_blade = new BladeCache($views, $cache);
+        $this->_blade     = new BladeCache($views, $cache);
+        $this->_variables = [];
 
         // 不使用缓存
         // $this->_blade = new BladeOne($views, $cache, BladeOne::MODE_AUTO);
@@ -29,8 +32,9 @@ class BladeAdapter implements Yaf\View_Interface
             return new $className();
         });
 
+        $base_url = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         // 全局变量
-        // $this->_blade->share('lang', 'test');
+        $this->_blade->share('base_url', $base_url);
 
         foreach ($bladeConfig as $key => $value) {
             $this->_blade->$key = $value;
@@ -62,23 +66,52 @@ class BladeAdapter implements Yaf\View_Interface
         return $this->_blade->template_dir ?? null;
     }
 
-    public function assign($name, $value = null)
+    public function assign($spec, $value = null)
     {
-        return true;
+        if (is_array($spec)) {
+            $this->_variables = array_merge($this->_variables, $spec);
+        } else {
+            $this->_variables[$spec] = $value;
+        }
     }
 
-    public function render($view_path, $tpl_vars = null)
+    public function clearVars()
     {
-        return true;
+        $this->_variables = [];
     }
 
-    public function display($view_path, $tpl_vars = null)
+    public function render($name, $tpl_vars = null)
     {
-        echo $this->_blade->run($view_path, $tpl_vars);
+        // return true;
+        if ($tpl_vars && is_array($tpl_vars)) {
+            $this->_variables = array_merge($this->_variables, $tpl_vars);
+        }
+        return $this->_blade->run($name, $this->_variables);
+    }
+
+    public function display($name, $tpl_vars = null)
+    {
+        echo $this->render($name, $tpl_vars);
     }
 
     public function getView()
     {
         return $this->_blade;
+    }
+
+    public function __set($key, $val)
+    {
+        $this->_variables[$key] = $val;
+    }
+
+    public function __isset($key)
+    {
+        throw new Exception("Not implemented");
+        // return (null !== $this->_blade->get_template_vars($key));
+    }
+
+    public function __unset($key)
+    {
+        unset($this->_variables[$key]);
     }
 }

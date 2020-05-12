@@ -17,7 +17,24 @@ class TagModel
             $this->table . '.name',
         ], [
             'ORDER' => [$this->table . '.id' => 'DESC'],
+            'LIMIT' => [$offset, $limit],
         ]);
         return $list;
+    }
+    /**
+     * 根据ids获取tag名称
+     * @param  string $ids [description]
+     * @return [type]      [description]
+     */
+    public function findTagsById($ids)
+    {
+        if (empty($ids)) {
+            return [];
+        }
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+        }
+        $data = $this->db->select($this->table, ['id', 'name'], ['id' => $ids]);
+        return $data;
     }
 }

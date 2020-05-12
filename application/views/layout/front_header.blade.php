@@ -1,6 +1,5 @@
 @inject('menu','MenuModel')
 @php
-    $active = rtrim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/');
     $navs = $menu->index();
 @endphp
 
@@ -16,7 +15,7 @@
             <div class="layui-form-item blog-sewrap">
                 <div class="layui-input-block blog-sebox">
                   <i class="layui-icon layui-icon-search"></i>
-                  <input type="text" name="title" lay-verify="title" autocomplete="off"  class="layui-input">
+                  <input type="text" name="q" lay-verify="title" autocomplete="off"  class="layui-input" value="{{ $_GET['q'] ?? '' }}">
                 </div>
             </div>
         </form>
@@ -24,7 +23,7 @@
             <ul class="layui-nav pull-left">
                 @foreach ($navs as $element)
                   <li class="layui-nav-item 
-                  {{ $active== $element['path'] ? 'layui-this' : '' }}
+                  {{ $base_url == $element['path'] ? 'layui-this' : '' }}
                   ">
                   <a href="{{ $element['path'] }}">{{ $element['name'] }}</a></li>
                 @endforeach

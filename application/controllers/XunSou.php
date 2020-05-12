@@ -110,22 +110,6 @@ class XunSouController extends Controller
         $words = $search->getHotQuery($limit, $type); // 获取前 10 个上周热门词
     }
 
-    public function fuzzySearchAction($search = '', $offset = 0, $limit = 50, $field = 'title', $add_weight = '')
-    {
-        $docs = $this->_search->setQuery($search);
-        if ($add_weight) {
-            // 增加附加条件：提升标题中包含 $add_weight 的记录的权重
-            $this->_search->addWeight($field, $add_weight);
-        }
-        $doc = $this->_search->setLimit($limit, $offset)
-            ->search();
-
-        // 获取搜索结果的匹配总数估算值
-        $count = $this->_search->count();
-        return;
-
-    }
-
     public function searchAction()
     {
         // 支持的 GET 参数列表
@@ -142,8 +126,8 @@ class XunSouController extends Controller
             $$_ = $_GET[$_] ?? '';
         }
         // recheck request parameters
-        $q             = get_magic_quotes_gpc() ? stripslashes($q) : $q;
-        $f             = empty($f) ? '_all' : $f;
+        $q = get_magic_quotes_gpc() ? stripslashes($q) : $q;
+        $f = empty($f) ? '_all' : $f;
 
         // base url
         $bu = $this->getRequest()->uri . '?q=' . urlencode($q) . '&m=' . $m . '&f=' . $f;
@@ -220,7 +204,7 @@ class XunSouController extends Controller
         }
         // calculate total time cost
         $total_cost = microtime(true) - $total_begin;
-        return view('xunsou.search', compact('q', 's','f', 'm', 'syn', 'hot', 'docs', 'search', 'count', 'total', 'total_cost', 'error', 'related', 'corrected', 'search_cost', 'pager'));
+        return view('xunsou.search', compact('q', 's', 'f', 'm', 'syn', 'hot', 'docs', 'search', 'count', 'total', 'total_cost', 'error', 'related', 'corrected', 'search_cost', 'pager'));
     }
 
     /**

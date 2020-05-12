@@ -1,7 +1,5 @@
 @extends('layout.front')
 @section('css')
-  {{-- 改写layuiform元素样式 --}}
-  <link href="/public/lib/layui-v2.5.6/css/form.css" rel="stylesheet">
   {{-- simplemd样式 --}}
   <link href="/public/lib/simplemde-1.11.2/simplemde.min.css" rel="stylesheet">
   
@@ -20,6 +18,7 @@
 {{-- 上传图片 start --}}
 <script src="/public/lib/simplemde-1.11.2/inline-attachment.min.js"></script>
 <script src="/public/lib/simplemde-1.11.2/codemirror-4.inline-attachment.min.js"></script>
+<script src="/public/lib/layui-v2.5.6/xm-select.js"></script>
 {{-- 上传图片 end --}}
 {{-- 代码高亮需要的js --}}
 <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.0.1/highlight.min.js"></script>
@@ -56,12 +55,7 @@
               <div class="layui-form-item">
                 <label class="layui-form-label">标签：</label>
                 <div class="layui-input-block">
-                  <select name="tags[]" multiple lay-search="">
-                      <option value=""></option>
-                      @foreach ($tags as $tag)
-                          <option value="{{ $tag['id'] }}">{{ $tag['name'] }}</option>
-                      @endforeach
-                  </select>
+                  <div id="mulselect"></div>
                 </div>
               </div>
           @endif
@@ -99,6 +93,8 @@
 
 @section('js')
 {{-- 
+多选
+https://gitee.com/maplemei/xm-select
 https://www.jianshu.com/p/d09b35ca500d
 https://learnku.com/articles/25988
 https://learnku.com/articles/31749 
@@ -111,13 +107,19 @@ $(document).ready(function() {
     layui.use(['layer', 'form'], function(){
       var layer = layui.layer
       ,form = layui.form;
+    });
 
-      form.on('submit(demo1)', function(data){
-          layer.alert(JSON.stringify(data.field), {
-            title: '最终的提交信息'
-          });
-          // return false;
-        });
+    // https://maplemei.gitee.io/xm-select/#/component/install
+    var multiSelect = xmSelect.render({
+      el: '#mulselect', 
+      filterable: true,
+      layVerify: 'required',
+      layVerType: 'tips',
+      max: 3,
+      maxMethod(seles, item){
+        layer.msg('最多只能选3个！',{time:750});
+      },
+      data: {!! $tags !!}
     });
 
     var editor = new SimpleMDE({
@@ -139,7 +141,6 @@ $(document).ready(function() {
         },
     });
 
-    editor.value('# Marked in browser\n\nRendered by **marked**.');
     var inlineAttachmentConfig = {
         uploadUrl: '/tool/uploadImage',               //后端上传图片地址
         uploadFieldName: 'upload_file',          //上传的文件名
