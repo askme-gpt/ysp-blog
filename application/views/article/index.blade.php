@@ -49,10 +49,13 @@ layui.use(['jquery','laypage'], function(){
         //obj包含了当前分页的所有参数，比如：
         //首次不执行
         if(!first){
-            var q = $('input[name=q]').val();
-            var href = '{{ $base_url }}?q=' + q;
-            href += '&page=' + obj.curr;
-            href += '&limit=' + obj.limit;
+            obj = {
+                q:$('input[name=q]').val(),
+                page:obj.curr,
+                limit:obj.limit
+            };
+            
+            var href = '{{ $base_url }}?' + $.param(obj);
             location.href = href;
         }
       }

@@ -1,14 +1,13 @@
 <?php
 
+use eftec\bladeone\BladeOne;
 use Medoo\Medoo;
-
-// use eftec\bladeone\BladeOne;
 
 class BladeAdapter implements Yaf\View_Interface
 {
 
     public $_blade;
-    public $_variables;
+    public $_variables = [];
     /**
      * Constructor
      *
@@ -22,8 +21,8 @@ class BladeAdapter implements Yaf\View_Interface
         $views       = $bladeConfig['template_dir'] ?? '';
         $cache       = $bladeConfig['cache_dir'] ?? '';
         // 使用缓存
-        $this->_blade     = new BladeCache($views, $cache);
-        $this->_variables = [];
+        $this->_blade = new BladeCache($views, $cache);
+        // $this->_blade = new BladeCache($views, $cache, BladeOne::MODE_DEBUG);
 
         // 不使用缓存
         // $this->_blade = new BladeOne($views, $cache, BladeOne::MODE_AUTO);
@@ -68,6 +67,7 @@ class BladeAdapter implements Yaf\View_Interface
 
     public function assign($spec, $value = null)
     {
+        // return true;
         if (is_array($spec)) {
             $this->_variables = array_merge($this->_variables, $spec);
         } else {
@@ -82,16 +82,17 @@ class BladeAdapter implements Yaf\View_Interface
 
     public function render($name, $tpl_vars = null)
     {
-        // return true;
-        if ($tpl_vars && is_array($tpl_vars)) {
-            $this->_variables = array_merge($this->_variables, $tpl_vars);
-        }
-        return $this->_blade->run($name, $this->_variables);
+        return true;
+        // if ($tpl_vars && is_array($tpl_vars)) {
+        //     $this->_variables = array_merge($this->_variables, $tpl_vars);
+        // }
+        // $name = str_replace(array('\\', '/', '.blade.php'), array('.', '.', ''), $name);
+        // return $this->_blade->run($name, $this->_variables);
     }
 
     public function display($name, $tpl_vars = null)
     {
-        echo $this->render($name, $tpl_vars);
+        echo $this->_blade->run($name, $tpl_vars);
     }
 
     public function getView()

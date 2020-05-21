@@ -23,14 +23,14 @@
 								<span class="mar-left">作者：{{ $data['name'] }}</span>
 								<span class="mar-left">阅读数：{{ $data['visits'] }}</span>
 
-								@if (isset($tags) && is_array($tags))
+								@if (isset($tags) && !empty($tags))
 									@php
 										$color=['cyan', 'orange', 'blue'];
 									@endphp
 									<span class="mar-left">标签：
 									@foreach ($tags as $key => $element)
 										<a class="layui-badge layui-bg-{{ $color[$key] }}" 
-										href="/article/tag?tid={{ $element['id'] }}">
+										href="/article/index?tid={{ $element['id'] }}">
 										{{ $element['name'] }}</a>
 									@endforeach
 									</span>

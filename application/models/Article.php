@@ -1,5 +1,7 @@
 <?php
 
+use Medoo\Medoo;
+
 class ArticleModel extends BaseModel
 {
     public $table = 'articles';
@@ -19,19 +21,40 @@ class ArticleModel extends BaseModel
         ];
     }
 
-    public function index($search = '', $page = 0, $limit = 15)
+    public function index(string $search = '', int $page = 0, int $limit = 15, int $category_id = 0, int $tag_id = 0)
     {
         $conditions = [
             $this->table . '.status' => 10,
-            "OR"                     => [
-                $this->table . '.title[~]'   => $search,
-                $this->table . '.content[~]' => $search,
-            ],
         ];
+
+        if ($search) {
+            $search_con = [
+                "OR" => [
+                    $this->table . '.title[~]'   => $search,
+                    $this->table . '.content[~]' => $search,
+                ],
+            ];
+            $conditions = array_merge($conditions, $search_con);
+        }
+
+        if ($category_id && is_int($category_id)) {
+            $category_con = [
+                $this->table . '.category_id' => $category_id,
+            ];
+            $conditions = array_merge($conditions, $category_con);
+        }
+
+        if ($tag_id && is_int($tag_id)) {
+            $tag_con    = [Medoo::raw(sprintf('FIND_IN_SET(%s,<tags>)', $tag_id))];
+            $conditions = array_merge($conditions, $tag_con);
+        }
+
         $limit = [
             'ORDER' => [$this->table . '.id' => 'DESC'],
             'LIMIT' => [($page - 1) * $limit, $limit],
         ];
+
+        // $list = $this->db->debug()->select($this->table, [
         $list = $this->db->select($this->table, [
             "[>]users"      => ["user_id" => "id"],
             "[>]categories" => ["category_id" => "id"],

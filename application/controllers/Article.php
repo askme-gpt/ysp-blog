@@ -19,10 +19,12 @@ class ArticleController extends Controller
     public function indexAction()
     {
         $params = $this->getRequest()->getQuery();
-        $search = $params['q'] ?? null;
+        $search = $params['q'] ?? '';
         $page   = $params['page'] ?? 1;
         $limit  = $params['limit'] ?? 10;
-        $data   = $this->article->index($search, $page, $limit);
+        $cid    = $params['cid'] ?? 0;
+        $tid    = $params['tid'] ?? 0;
+        $data   = $this->article->index($search, (int) $page, (int) $limit, (int) $cid, (int) $tid);
         return view('article.index', compact('data'));
     }
 
@@ -66,16 +68,5 @@ class ArticleController extends Controller
             exit($this->article->firstError());
         }
         return redirect("/article/read", ['id' => $insert_id]);
-    }
-
-    /**
-     * 根据文章分类id获取类目文章
-     * @return [type] [description]
-     */
-    public function categoryAction()
-    {
-        $category_id = $this->getRequest()->getQuery('cat');
-        $data        = $this->article->articleByCategory($category_id);
-        return view('article.index', compact('data'));
     }
 }
