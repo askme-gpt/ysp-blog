@@ -86,7 +86,7 @@ https://github.com/sparksuite/simplemde-markdown-editor
 <script>
   $(document).ready(function(){
     document.getElementById('content').innerHTML =
-    marked('# Marked in browser\n\nRendered by **marked**.');
+    marked({!! $data['content'] !!});
   })
 
 </script>

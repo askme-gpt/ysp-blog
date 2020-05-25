@@ -20,14 +20,18 @@
 							<h3>{{ $data['title'] }}</h3>
 							<h5>
 								<span>发布于：{{ $data['created_at'] }}</span>
-								<span class="mar-left">作者：{{ $data['name'] }}</span>
+								<span class="mar-left">作者：{{ $data['username'] }}</span>
 								<span class="mar-left">阅读数：{{ $data['visits'] }}</span>
-
+								<span class="mar-left">栏目：<a class="layui-badge layui-bg-blue" 
+								href="/article/index?cid={{ $data['cid'] }}">
+								{{ $data['category_name'] }}</a></span>
+							</h5>
+							<h5>
 								@if (isset($tags) && !empty($tags))
 									@php
 										$color=['cyan', 'orange', 'blue'];
 									@endphp
-									<span class="mar-left">标签：
+									<span>标签：
 									@foreach ($tags as $key => $element)
 										<a class="layui-badge layui-bg-{{ $color[$key] }}" 
 										href="/article/index?tid={{ $element['id'] }}">
@@ -36,6 +40,7 @@
 									</span>
 								@endif
 							</h5>
+							<br>
 							<p id="content"></p>
 							<div class="count layui-clear">
 								@if ($data['updated_at'] && $data['updated_at'] !== $data['created_at'])

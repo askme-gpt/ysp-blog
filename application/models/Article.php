@@ -106,14 +106,16 @@ class ArticleModel extends BaseModel
                 $this->table . '.like',
                 $this->table . '.created_at',
                 $this->table . '.updated_at',
-                'users.name',
-                'categories.name',
+                'users.name(username)',
+                'categories.name(category_name)',
+                'categories.id(cid)',
             ],
             [
                 $this->table . '.id'     => $id,
                 $this->table . '.status' => 10,
             ]
         );
+        // dd($article);
         return $article;
     }
 

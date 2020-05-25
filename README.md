@@ -16,6 +16,7 @@
 
 "hightman/xunsearch": "^1.4"
 >支持中文的全文搜索引擎php客户端，服务器端参考下面两个链接：
+
 https://blog.csdn.net/zhezhebie/article/details/105928625
 http://www.xunsearch.com/doc/php/guide/ini.guide
 
@@ -30,6 +31,9 @@ http://www.xunsearch.com/doc/php/guide/ini.guide
 > 发送邮件的模块，还没来得及写对应的邮件逻辑，先装着放着。
 
 目前就这几个包。后续验证码，图片处理之类的只用简单的库文件就行了。
+
+### 数据库
+blog.sql文件是数据库，导入就能用。
 
 ### TODO
 后期准备添加sphinx支持，参考文章：

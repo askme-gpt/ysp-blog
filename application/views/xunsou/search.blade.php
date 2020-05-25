@@ -98,7 +98,7 @@ Demo 搜索 - Powered by xunsearch</title>
       <dl class="result-list">
         @foreach ($docs as $doc)
         <dt>
-          <a href="javascript:void(alert('id {{ $doc->id }}'));">
+          <a href="/article/read?id={{ $doc->id }}">
             <h4>{{ $doc->rank() }}. {!! $search->highlight(htmlspecialchars($doc->title),true) !!}
               <small>[{{ $doc->percent() }}%]</small>
             </h4>

@@ -115,9 +115,9 @@ $(document).ready(function() {
       filterable: true,
       layVerify: 'required',
       layVerType: 'tips',
-      max: 3,
+      max: 5,
       maxMethod(seles, item){
-        layer.msg('最多只能选3个！',{time:750});
+        layer.msg('最多只能选5个！',{time:750});
       },
       data: {!! $tags !!}
     });

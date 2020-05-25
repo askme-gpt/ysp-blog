@@ -11,7 +11,7 @@
                 <img src="/public/img/logo-text.png" alt="" class="logo-text">
             </a>
         </h1>
-        <form class="layui-form blog-seach pull-left" action="">
+        <form class="layui-form blog-seach pull-left" action="/article/index">
             <div class="layui-form-item blog-sewrap">
                 <div class="layui-input-block blog-sebox">
                   <i class="layui-icon layui-icon-search"></i>
@@ -19,6 +19,14 @@
                 </div>
             </div>
         </form>
+
+        <div class="blog-nav">
+            <a href="/xunsou/search?q={{ $_GET['q'] ?? '' }}" class="personal pull-left" 
+            style="margin-left: 100px;">
+                <i class="layui-icon">试试高级搜索</i>
+            </a>
+        </div>
+
         <div class="blog-nav pull-right">
             <ul class="layui-nav pull-left">
                 @foreach ($navs as $element)

@@ -28,20 +28,15 @@ class XunSouController extends Controller
         // 创建文档对象
         $this->_doc = new XSDocument;
     }
+
     /**
      * 增加文档
      */
-    public function addAction()
+    public function addAction(array $value)
     {
-        $this->flushAction();
-        $article = new ArticleModel();
-        $data    = $article->allArticle();
-        foreach ($data as &$value) {
-            $value['updated_at'] = date('Ymd', strtotime($value['updated_at']));
-            // 添加到索引数据库中
-            $this->_doc->setFields($value);
-            $this->_index->add($this->_doc);
-        }
+        // 添加到索引数据库中
+        $this->_doc->setFields($value);
+        $this->_index->add($this->_doc);
     }
 
     /**
@@ -79,15 +74,17 @@ class XunSouController extends Controller
      */
     public function rebuildAction()
     {
-        // 宣布开始重建索引
+        $this->flushAction();
         $this->_index->beginRebuild();
 
-        // 然后在此开始添加数据
-        $this->_doc->setFields($value);
-
-        $this->_index->add($this->_doc);
-
-        // 告诉服务器重建完比
+        $article = new ArticleModel();
+        $data    = $article->allArticle();
+        foreach ($data as &$value) {
+            $value['updated_at'] = date('Ymd', strtotime($value['updated_at']));
+            // 添加到索引数据库中
+            $this->_doc->setFields($value);
+            $this->_index->add($this->_doc);
+        }
         $this->_index->endRebuild();
     }
 
@@ -126,12 +123,17 @@ class XunSouController extends Controller
             $$_ = $_GET[$_] ?? '';
         }
         // recheck request parameters
-        $q = get_magic_quotes_gpc() ? stripslashes($q) : $q;
+        $q = get_magic_quotes_gpc() ? stripslashes($q) : trim($q);
+        if (empty($q)) {
+            $q = '?';
+        }
+
         $f = empty($f) ? '_all' : $f;
 
         // base url
         $bu = $this->getRequest()->uri . '?q=' . urlencode($q) . '&m=' . $m . '&f=' . $f;
 
+        // dd($bu);
         // other variable maybe used in tpl
         $count       = $total       = $search_cost       = 0;
         $docs        = $related        = $corrected        = $hot        = array();
@@ -205,6 +207,78 @@ class XunSouController extends Controller
         // calculate total time cost
         $total_cost = microtime(true) - $total_begin;
         return view('xunsou.search', compact('q', 's', 'f', 'm', 'syn', 'hot', 'docs', 'search', 'count', 'total', 'total_cost', 'error', 'related', 'corrected', 'search_cost', 'pager'));
+    }
+
+    public function searchNewAction()
+    {
+        $total_begin = microtime(true);
+        $q           = $this->request->getQuery('q');
+        $params      = [
+            'q'   => $q,
+            'f'   => "_all",
+            'm'   => "checked",
+            'syn' => "checked",
+            's'   => "relevance",
+        ];
+        $bu = $this->getRequest()->uri . '?' . http_build_query($params);
+
+        // other variable maybe used in tpl
+        $count = $total = $search_cost = 0;
+        $docs  = $related  = $corrected  = $hot  = array();
+        $error = $pager = '';
+
+        // perform the search
+        try {
+            $search = $this->_search;
+            $search->setCharset('UTF-8');
+
+            if (empty($q)) {
+                // just show hot query
+                $hot = $search->getHotQuery();
+            } else {
+                // fuzzy search
+                $search->setFuzzy(true);
+
+                // synonym search
+                $search->setAutoSynonyms(true);
+
+                // set query
+                if (!empty($f) && $f != '_all') {
+                    $search->setQuery($f . ':(' . $q . ')');
+                } else {
+                    $search->setQuery($q);
+                }
+
+                // set sort,默认顺序，相关性靠前
+                $search->setSort('relevance');
+                // set offset, limit
+                $p = max(1, intval($p));
+
+                #搜索结果默认分页数量
+                $n = 10;
+                $search->setLimit($n, ($p - 1) * $n);
+
+                // get the result
+                $search_begin = microtime(true);
+                $docs         = $search->search();
+                $search_cost  = microtime(true) - $search_begin;
+
+                // get other result
+                $count = $search->getLastCount();
+                $total = $search->getDbTotal();
+
+                if ($count < 1 || $count < ceil(0.001 * $total)) {
+                    $corrected = $search->getCorrectedQuery();
+                }
+                // get related query
+                $related = $search->getRelatedQuery();
+            }
+        } catch (XSException $e) {
+            $error = strval($e);
+        }
+        // calculate total time cost
+        $total_cost = microtime(true) - $total_begin;
+        return compact('q', 'hot', 'docs', 'search', 'count', 'total', 'total_cost', 'error', 'related', 'corrected', 'search_cost');
     }
 
     /**
