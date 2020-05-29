@@ -15,12 +15,20 @@
                             </h3>
                             <h5>
                                 <span>发布于：{{ $element['created_at'] }}</span>
-                                <span class="mar-left">作者：{{ $element['name'] }}</span>
+                                <span class="mar-left">栏目：
+                                    <a class="layui-badge layui-bg-blue" href="/article/index?cid={{ $element['cid'] }}"> 
+                                        {{ $element['category_name'] }}
+                                    </a>
+                                </span>
+
+                                <span class="mar-left">作者：<a href='/article/index?uid={{ $element['uid'] }}'>{{ $element['user_name'] }}</a></span>
+
                                 <span class="mar-left">阅读数：{{ $element['visits'] }}</span>
                             </h5>
-
-                            <p id="content">{{ substr(str_replace(['#','|','![图片描述]','![',']','\r','\n','"','`','-','*',':'], '', strip_tags($element['content'])), 0,300) }}</p>
-                            <img src="/public/img/item.png" alt="">
+                            <a href='/article/read?id={{ $element['id'] }}'>
+                                <p id="content">{{ substr(str_replace(['#','|','![图片描述]','![',']','\r','\n','"','`','-','*',':'], '', strip_tags($element['content'])), 0,300) }}</p>
+                                <img src="/public/img/item.png" alt="">
+                            </a>
                         </div>
                     </div>
                 @endforeach
