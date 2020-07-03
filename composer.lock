@@ -74,16 +74,16 @@
         },
         {
             "name": "eftec/bladeone",
-            "version": "3.44.1",
+            "version": "3.46.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EFTEC/BladeOne.git",
-                "reference": "6da92f507761909ca1110d6a52c8a4119aecedc0"
+                "reference": "67ba5523e7e363a30cdf491f77d0645a3624273f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EFTEC/BladeOne/zipball/6da92f507761909ca1110d6a52c8a4119aecedc0",
-                "reference": "6da92f507761909ca1110d6a52c8a4119aecedc0",
+                "url": "https://api.github.com/repos/EFTEC/BladeOne/zipball/67ba5523e7e363a30cdf491f77d0645a3624273f",
+                "reference": "67ba5523e7e363a30cdf491f77d0645a3624273f",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -130,7 +130,7 @@
                 "templating",
                 "view"
             ],
-            "time": "2020-05-12T14:59:34+00:00"
+            "time": "2020-06-16T23:20:37+00:00"
         },
         {
             "name": "hightman/xunsearch",
@@ -198,16 +198,16 @@
         },
         {
             "name": "inhere/php-validate",
-            "version": "v2.8.0",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/inhere/php-validate.git",
-                "reference": "faf3eed28ebbd3513e240f4d51de7c4d6175a78a"
+                "reference": "3749f60dffaaaeb288bf256d096af9bd41ddd975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inhere/php-validate/zipball/faf3eed28ebbd3513e240f4d51de7c4d6175a78a",
-                "reference": "faf3eed28ebbd3513e240f4d51de7c4d6175a78a",
+                "url": "https://api.github.com/repos/inhere/php-validate/zipball/3749f60dffaaaeb288bf256d096af9bd41ddd975",
+                "reference": "3749f60dffaaaeb288bf256d096af9bd41ddd975",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -248,7 +248,7 @@
                 "validate",
                 "validation"
             ],
-            "time": "2020-04-26T14:23:49+00:00"
+            "time": "2020-06-25T02:17:50+00:00"
         },
         {
             "name": "inhere/sroute",
@@ -311,16 +311,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.1.5",
+            "version": "v6.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3"
+                "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/a8bf068f64a580302026e484ee29511f661b2ad3",
-                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
+                "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -377,19 +377,11 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "funding": [
                 {
-                    "url": "https://marcus.bointon.com/donations/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/Synchro",
+                    "url": "https://github.com/synchro",
                     "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/marcusbointon",
-                    "type": "patreon"
                 }
             ],
-            "time": "2020-03-14T14:23:48+00:00"
+            "time": "2020-05-27T12:24:03+00:00"
         }
     ],
     "packages-dev": [],
