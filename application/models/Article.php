@@ -16,12 +16,13 @@ class ArticleModel extends BaseModel
         return [
             ['user_id,title,type,content,category_id,tags', 'required'],
             ['type', 'in', [10, 20, 30]],
+            ['id', 'required', 'int', 'on' => 'update'],
             ['content', 'string', 'min' => 2, 'max' => 16500],
             ['category_id', 'number'],
         ];
     }
 
-    public function index(string $search = '', int $page = 0, int $limit = 15, int $category_id = 0, int $tag_id = 0)
+    public function index(string $search = '', int $page = 0, int $limit = 15, int $category_id = 0, int $tag_id = 0, int $user_id = 0)
     {
         $conditions = [
             $this->table . '.status' => 10,
@@ -49,6 +50,13 @@ class ArticleModel extends BaseModel
             $conditions = array_merge($conditions, $tag_con);
         }
 
+        if ($user_id && is_int($user_id)) {
+            $user_con = [
+                $this->table . '.user_id' => $user_id,
+            ];
+            $conditions = array_merge($conditions, $user_con);
+        }
+
         $limit = [
             'ORDER' => [$this->table . '.id' => 'DESC'],
             'LIMIT' => [($page - 1) * $limit, $limit],
@@ -65,9 +73,12 @@ class ArticleModel extends BaseModel
             $this->table . '.content',
             $this->table . '.visits',
             $this->table . '.created_at',
-            'users.name',
-            'categories.name',
+            'users.id(uid)',
+            'users.name(user_name)',
+            'categories.id(cid)',
+            'categories.name(category_name)',
         ], array_merge($conditions, $limit));
+
         $count = $this->db->count($this->table, $conditions);
         return [
             'list'  => $list,
@@ -146,7 +157,10 @@ class ArticleModel extends BaseModel
     public function articleInfo($id)
     {
         $article = $this->findArticle($id);
-        $data    = [
+        if (!$article) {
+            return [];
+        }
+        $data = [
             'data'     => $article,
             'comments' => $this->findArticleComments($id),
             'tags'     => $this->articleTags($article['tags'] ?? ''),
@@ -158,42 +172,5 @@ class ArticleModel extends BaseModel
     {
         $tag = new TagModel();
         return $tag->findTagsById($tag_ids);
-    }
-
-    /**
-     * [articleByCategory description]
-     * @param  [type] $category_id [description]
-     * @return [type]              [description]
-     */
-    public function articleByCategory($category_id, $offset = 0, $limit = 15)
-    {
-        $list = $this->db->select($this->table, [
-            "[>]users"      => ["user_id" => "id"],
-            "[>]categories" => ["category_id" => "id"],
-        ], [
-            $this->table . '.id',
-            $this->table . '.title',
-            $this->table . '.tags',
-            $this->table . '.content',
-            $this->table . '.visits',
-            $this->table . '.created_at',
-            'users.name',
-            'categories.name',
-        ], [
-            $this->table . '.status'      => 10,
-            $this->table . '.category_id' => $category_id,
-            'ORDER'                       => [$this->table . '.id' => 'DESC'],
-            'LIMIT'                       => [$offset, $limit],
-        ]);
-        $count = $this->db->count($this->table, ['status' => 10, 'category_id' => $category_id]);
-        return [
-            'list'  => $list,
-            'count' => $count,
-        ];
-    }
-
-    public function paginate($value = '')
-    {
-
     }
 }

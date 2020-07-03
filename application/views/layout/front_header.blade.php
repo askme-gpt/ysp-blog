@@ -15,7 +15,7 @@
             <div class="layui-form-item blog-sewrap">
                 <div class="layui-input-block blog-sebox">
                   <i class="layui-icon layui-icon-search"></i>
-                  <input type="text" name="q" lay-verify="title" autocomplete="off"  class="layui-input" value="{{ $_GET['q'] ?? '' }}">
+                  <input type="text" name="q" autocomplete="off" placeholder="输入要查询的词之后回车" class="layui-input" value="{{ $_GET['q'] ?? '' }}">
                 </div>
             </div>
         </form>

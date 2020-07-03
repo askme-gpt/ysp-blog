@@ -13,7 +13,7 @@ class XunSouController extends Controller
     private $_doc;
     private $_search;
 
-    public function init($value = '')
+    public function init()
     {
         // 关闭view
         Yaf\Dispatcher::getInstance()->disableView();

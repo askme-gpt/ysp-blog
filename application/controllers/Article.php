@@ -24,7 +24,9 @@ class ArticleController extends Controller
         $limit  = $params['limit'] ?? 10;
         $cid    = $params['cid'] ?? 0;
         $tid    = $params['tid'] ?? 0;
-        $data   = $this->article->index($search, (int) $page, (int) $limit, (int) $cid, (int) $tid);
+        $uid    = $params['uid'] ?? 0;
+
+        $data = $this->article->index($search, (int) $page, (int) $limit, (int) $cid, (int) $tid, (int) $uid);
         return view('article.index', compact('data'));
     }
 

@@ -13,7 +13,7 @@
 	<div class="container-wrap">
 		<div class="container container-message container-details">
 			<div class="contar-wrap">
-				@if ($data)
+				@if (!empty($data))
 					{{-- 文章详情 start--}}
 					<div class="item">
 						<div class="item-box layer-photos-demo1 layer-photos-demo">
@@ -25,6 +25,9 @@
 								<span class="mar-left">栏目：<a class="layui-badge layui-bg-blue" 
 								href="/article/index?cid={{ $data['cid'] }}">
 								{{ $data['category_name'] }}</a></span>
+								@can('edit',true)
+									<span class="mar-left"><i class="layui-icon layui-icon-edit"></i></span>
+								@endcan
 							</h5>
 							<h5>
 								@if (isset($tags) && !empty($tags))
