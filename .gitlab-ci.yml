@@ -12,7 +12,7 @@ test:
       when: on_success
     - when: never
   script: 
-    - echo "2222222222222"
+    - echo "222222222222222"
     - pwd
     - pwd
     - echo "$CI_COMMIT_REF_NAME"
