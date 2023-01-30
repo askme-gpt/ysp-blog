@@ -1,0 +1,18 @@
+stages:
+  - test
+
+test: 
+  stage: test
+  tags:
+    - gitlab-ci-runner-k8s
+  rules: 
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'master'
+      when: on_success
+    - if: $TEST == '1'
+      when: on_success
+    - when: never
+  script: 
+    - echo "2222222222222"
+    - pwd
+    - pwd
+    - echo "$CI_COMMIT_REF_NAME"
